@@ -12,12 +12,12 @@ public record AuthSocialLoginRequest(
     }
 
     @AssertTrue(message = "provider는 반드시 입력되어야합니다.")
-    public boolean isProviderValid() {
+    private boolean _isProviderValid() {
         return provider != null && !provider.isBlank();
     }
 
     @AssertTrue(message = "providerAccessToken는 반드시 입력되어야합니다.")
-    public boolean isProviderAccessTokenValid() {
+    private boolean _isProviderAccessTokenValid() {
         return providerAccessToken != null && !providerAccessToken.isBlank();
     }
 }
