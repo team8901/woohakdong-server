@@ -7,8 +7,10 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Component
@@ -35,17 +37,20 @@ public class GoogleLoginProvider implements SocialLoginProvider {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
-                GOOGLE_OAUTH_ENDPOINT,
-                HttpMethod.GET,
-                entity,
-                new ParameterizedTypeReference<>() {
-                }
-        );
-
-        if (!response.getStatusCode().is2xxSuccessful()) {
-            throw new IllegalStateException("Google OAuth 요청 실패: " + response.getStatusCode());
+        ResponseEntity<Map<String, Object>> response = null;
+        try {
+            response = restTemplate.exchange(
+                    GOOGLE_OAUTH_ENDPOINT,
+                    HttpMethod.GET,
+                    entity,
+                    new ParameterizedTypeReference<>() {
+                    }
+            );
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == HttpStatus.UNAUTHORIZED.value()) {
+                throw new IllegalStateException("Google OAuth 요청 실패: 인증되지 않은 토큰입니다.");
+            }
+            throw new IllegalStateException("Google OAuth 요청 실패: " + e.getResponseBodyAsString());
         }
 
         Map<String, Object> body = response.getBody();
