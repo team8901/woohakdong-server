@@ -1,6 +1,6 @@
 package com.woohakdong.infrastructure.security;
 
-import com.woohakdong.context.auth.domain.JwtTokenService;
+import com.woohakdong.context.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,7 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
-    private final JwtTokenService jwtTokenService;
+    private final JwtUtil jwtUtil;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -27,8 +27,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String token = resolveToken(request);
 
-        if (token != null && jwtTokenService.validateToken(token)) {
-            Long userAuthId = jwtTokenService.getUserAuthIdFromToken(token);
+        if (token != null && jwtUtil.validateToken(token)) {
+            Long userAuthId = jwtUtil.getUserAuthIdFromToken(token);
             RequestUser requestUser = new RequestUser(userAuthId, List.of(new SimpleGrantedAuthority("ROLE_USER")));
             SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(requestUser, null, requestUser.getAuthorities()));
         }
