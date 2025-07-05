@@ -2,6 +2,7 @@ package com.woohakdong.context.auth.domain;
 
 import com.woohakdong.context.auth.model.SocialLoginTokens;
 import com.woohakdong.context.auth.model.UserAuthEntity;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -32,6 +33,16 @@ public class JwtTokenService {
         return new SocialLoginTokens(accessToken, refreshToken);
     }
 
+    public boolean validateToken(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        return !claims.getExpiration().before(new Date());
+    }
+
 
     private String createToken(String type, Long userAuthId, String role, Long expiredMs) {
         return Jwts.builder()
@@ -43,4 +54,13 @@ public class JwtTokenService {
                 .compact();
     }
 
+    public Long getUserAuthIdFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        return claims.get("userAuthId", Long.class);
+    }
 }
