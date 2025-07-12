@@ -1,14 +1,12 @@
-# 1. OpenJDK 17 이미지를 기반으로 사용
-FROM openjdk:21-jdk-slim
-
-LABEL authors="sangjun"
-
-# 2. 작업 디렉토리 생성
+# 1단계: 빌드 단계 (Gradle + JDK 포함 이미지)
+FROM gradle:8.4-jdk21 AS build
 WORKDIR /app
+COPY --chown=gradle:gradle . /app
+RUN gradle bootJar --no-daemon
 
-# 3. 빌드된 JAR 파일을 컨테이너 내부로 복사
-COPY build/libs/*.jar app.jar
-
-# 4. 애플리케이션 실행
+# 2단계: 실행 단계 (작은 JDK 이미지)
+FROM openjdk:21-jdk-slim
+WORKDIR /app
+COPY --from=build /app/build/libs/*.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -22,9 +22,6 @@ while true; do
 
     git pull origin "$BRANCH"
 
-    echo "[INFO] Building JAR with Gradle..."
-    ./gradlew bootJar || { echo "[ERROR] Gradle build failed"; exit 1; }
-
     echo "[INFO] Building Docker image..."
     docker build -t "$IMAGE_NAME" .
 
