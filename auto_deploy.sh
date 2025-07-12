@@ -6,10 +6,8 @@ IMAGE_NAME="woohakdong-dev:latest"
 CONTAINER_NAME="woohakdong"
 PORT="8080"
 
-# 슬랙 웹훅 환경변수 불러오기
 SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL}
 
-# 슬랙 메시지 함수 정의 (먼저 선언되어야 함)
 send_slack_message() {
   local MESSAGE=$1
   if [[ -n "$SLACK_WEBHOOK_URL" ]]; then
