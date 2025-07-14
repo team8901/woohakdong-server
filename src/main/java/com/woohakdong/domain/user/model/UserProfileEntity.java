@@ -31,6 +31,7 @@ public class UserProfileEntity {
     private String nickName;
     private String email;
     private String phoneNumber;
+    private String studentId;
 
     @Enumerated(value = EnumType.STRING)
     private Gender gender;
@@ -39,4 +40,16 @@ public class UserProfileEntity {
     @JoinColumn(name = "user_auth_id")
     private UserAuthEntity userAuthEntity;
 
+    public static UserProfileEntity createNewUser(UserAuthEntity userAuth, UserProfileCreateCommand command) {
+        return new UserProfileEntity(
+                null,
+                userAuth.getName(),
+                command.nickname(),
+                userAuth.getEmail(),
+                command.phoneNumber(),
+                command.studentId(),
+                command.gender(),
+                userAuth
+        );
+    }
 }
