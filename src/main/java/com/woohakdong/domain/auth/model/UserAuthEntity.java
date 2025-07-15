@@ -1,6 +1,8 @@
 package com.woohakdong.domain.auth.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,7 +24,8 @@ public class UserAuthEntity {
     private Long id;
     private String name;
     private String email;
-    private String role;
+    @Enumerated(value = EnumType.STRING)
+    private UserAuthRole role;
     private String authProvider;
     private String authProviderUserId;
 
@@ -31,7 +34,7 @@ public class UserAuthEntity {
                 null,
                 socialUserInfo.name(),
                 socialUserInfo.email(),
-                "USER",
+                UserAuthRole.USER,
                 socialUserInfo.provider(),
                 socialUserInfo.providerUserId()
         );
