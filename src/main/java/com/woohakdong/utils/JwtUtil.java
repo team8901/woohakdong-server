@@ -1,5 +1,6 @@
 package com.woohakdong.utils;
 
+import com.woohakdong.domain.auth.model.UserAuthRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import java.nio.charset.StandardCharsets;
@@ -32,7 +33,7 @@ public class JwtUtil {
     }
 
 
-    public String createToken(String type, Long userAuthId, String role, Long expiredMs) {
+    public String createToken(String type, Long userAuthId, UserAuthRole role, Long expiredMs) {
         return Jwts.builder()
                 .claim("type", type)
                 .claim("userAuthId", userAuthId)
