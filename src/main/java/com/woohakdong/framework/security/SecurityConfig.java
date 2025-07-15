@@ -1,9 +1,9 @@
 package com.woohakdong.framework.security;
 
+import com.woohakdong.framework.config.CorsConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -30,7 +30,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
         http.formLogin(AbstractHttpConfigurer::disable);
         http.httpBasic(AbstractHttpConfigurer::disable);
-        http.cors(Customizer.withDefaults());
+        http.cors(cors -> cors.configurationSource(CorsConfig.getCorsConfigSource()));
 
         http.authorizeHttpRequests(req -> req
                 .requestMatchers(SWAGGER_UI_PATHS).permitAll()
