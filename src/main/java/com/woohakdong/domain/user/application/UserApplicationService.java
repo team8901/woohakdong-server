@@ -27,6 +27,10 @@ public class UserApplicationService {
     @Transactional
     public Long createProfileWithAuthId(Long userAuthId, UserProfileCreateCommand command) {
         UserAuthEntity userAuth = userAuthRepository.getReferenceById(userAuthId);
+        if (userProfileRepository.existsByUserAuthEntity(userAuth)) {
+            // TODO : 커스텀 에러로 변경
+            throw new IllegalArgumentException("이미 프로필이 존재합니다.");
+        }
         UserProfileEntity userProfile = UserProfileEntity.createNewUser(userAuth, command);
         UserProfileEntity saved = userProfileRepository.save(userProfile);
         return saved.getId();
