@@ -1,11 +1,15 @@
 package com.woohakdong.domain.club.domain;
 
+import static com.woohakdong.framework.exception.CustomErrorInfo.CONFLICT_ALREADY_JOINED_CLUB;
+import static com.woohakdong.framework.exception.CustomErrorInfo.NOT_FOUND_CLUB;
+
 import com.woohakdong.domain.club.infrastructure.storage.ClubMemberShipRepository;
 import com.woohakdong.domain.club.infrastructure.storage.ClubRepository;
 import com.woohakdong.domain.club.model.ClubEntity;
 import com.woohakdong.domain.club.model.ClubMembershipEntity;
 import com.woohakdong.domain.club.model.ClubRegisterCommand;
 import com.woohakdong.domain.user.model.UserProfileEntity;
+import com.woohakdong.framework.exception.CustomException;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,14 +29,12 @@ public class ClubDomainService {
 
     public void assignClubOwner(Long clubId, UserProfileEntity userProfile) {
         ClubEntity club = clubRepository.findById(clubId).orElseThrow(
-                // TODO : 커스텀 에러로 변경
-                () -> new IllegalArgumentException("존재하지 않는 동아리입니다.")
+                () -> new CustomException(NOT_FOUND_CLUB)
         );
 
         ClubMembershipEntity clubMembership = ClubMembershipEntity.createClubOwner(club, userProfile);
         if (clubMemberShipRepository.existsByClubAndUserProfile(club, userProfile)) {
-            // TODO : 커스텀 에러로 변경
-            throw new IllegalArgumentException("이미 동아리의 회원입니다.");
+            throw new CustomException(CONFLICT_ALREADY_JOINED_CLUB);
         }
 
         clubMemberShipRepository.save(clubMembership);

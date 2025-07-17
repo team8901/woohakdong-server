@@ -1,10 +1,14 @@
 package com.woohakdong.domain.user.application;
 
+import static com.woohakdong.framework.exception.CustomErrorInfo.CONFLICT_ALREADY_EXISTING_USER_PROFILE;
+import static com.woohakdong.framework.exception.CustomErrorInfo.NOT_FOUND_USER_PROFILE;
+
 import com.woohakdong.domain.auth.infrastructure.storage.repository.UserAuthRepository;
 import com.woohakdong.domain.auth.model.UserAuthEntity;
 import com.woohakdong.domain.user.infrastructure.storage.repository.UserProfileRepository;
 import com.woohakdong.domain.user.model.UserProfileCreateCommand;
 import com.woohakdong.domain.user.model.UserProfileEntity;
+import com.woohakdong.framework.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,8 +23,7 @@ public class UserApplicationService {
         UserAuthEntity userAuth = userAuthRepository.getReferenceById(userAuthId);
         return userProfileRepository.findByUserAuthEntity(userAuth)
                 .orElseThrow(
-                        // TODO : 커스텀 에러로 변경
-                        () -> new IllegalArgumentException("프로필을 입력하지 않았습니다.")
+                        () -> new CustomException(NOT_FOUND_USER_PROFILE)
                 );
     }
 
@@ -28,8 +31,7 @@ public class UserApplicationService {
     public Long createProfileWithAuthId(Long userAuthId, UserProfileCreateCommand command) {
         UserAuthEntity userAuth = userAuthRepository.getReferenceById(userAuthId);
         if (userProfileRepository.existsByUserAuthEntity(userAuth)) {
-            // TODO : 커스텀 에러로 변경
-            throw new IllegalArgumentException("이미 프로필이 존재합니다.");
+            throw new CustomException(CONFLICT_ALREADY_EXISTING_USER_PROFILE);
         }
         UserProfileEntity userProfile = UserProfileEntity.createNewUser(userAuth, command);
         UserProfileEntity saved = userProfileRepository.save(userProfile);
