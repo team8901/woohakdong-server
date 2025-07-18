@@ -22,6 +22,10 @@ public enum CustomErrorInfo {
     UNAUTHORIZED_EXPIRED_TOKEN(401, "만료된 토큰입니다.", "401002"),
     UNAUTHORIZED_NO_TOKEN(401, "인증 토큰이 없습니다.", "401003"),
 
+    // 403 Forbidden
+    FORBIDDEN_UNAUTHORIZED(403, "접근 권한이 없습니다.", "403001"),
+
+
     // 404 Not Found
     NOT_FOUND_USER_PROFILE(404, "해당 유저 프로필을 찾을 수 없습니다.", "404001"),
     NOT_FOUND_CLUB(404, "해당 동아리를 찾을 수 없습니다.", "404002"),

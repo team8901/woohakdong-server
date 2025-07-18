@@ -1,7 +1,11 @@
 package com.woohakdong.utils;
 
 import com.woohakdong.domain.auth.model.UserAuthRole;
+import com.woohakdong.exception.CustomAuthException;
+import com.woohakdong.exception.CustomErrorInfo;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -22,17 +26,54 @@ public class JwtUtil {
         );
     }
 
-    public boolean validateToken(String token) {
-        Claims claims = Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-
-        return !claims.getExpiration().before(new Date());
+    /**
+     * 토큰에서 userAuthId를 추출합니다. 내부적으로 토큰 유효성 검사를 수행합니다.
+     *
+     * @param token JWT 토큰
+     * @return userAuthId
+     * @throws CustomAuthException 토큰이 유효하지 않은 경우
+     */
+    public Long getUserAuthIdFromToken(String token) {
+        return getClaims(token).get("userAuthId", Long.class);
     }
 
+    /**
+     * 토큰의 유효성을 검사합니다.
+     *
+     * @param token JWT 토큰
+     * @throws CustomAuthException 토큰이 유효하지 않은 경우 (만료, 형식 오류 등)
+     */
+    public void validateToken(String token) {
+        // getClaims 내부에서 모든 검증(만료 포함)을 처리하므로, 호출만으로 검증이 완료됩니다.
+        getClaims(token);
+    }
 
+    /**
+     * 토큰을 파싱하여 클레임(Payload)을 반환하고, 과정에서 발생하는 예외를 처리합니다.
+     *
+     * @param token JWT 토큰
+     * @return 토큰의 클레임
+     * @throws CustomAuthException 토큰 관련 예외 발생 시
+     */
+    private Claims getClaims(String token) {
+        try {
+            return Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (ExpiredJwtException e) {
+            // 토큰이 만료된 경우
+            throw new CustomAuthException(CustomErrorInfo.UNAUTHORIZED_EXPIRED_TOKEN);
+        } catch (JwtException | IllegalArgumentException e) {
+            // 그 외 모든 JWT 관련 예외 (서명 오류, 형식 오류 등)
+            throw new CustomAuthException(CustomErrorInfo.UNAUTHORIZED_INVALID_TOKEN);
+        }
+    }
+
+    /**
+     * 새로운 JWT 토큰을 생성합니다.
+     */
     public String createToken(String type, Long userAuthId, UserAuthRole role, Long expiredMs) {
         return Jwts.builder()
                 .claim("type", type)
@@ -41,15 +82,5 @@ public class JwtUtil {
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))
                 .signWith(secretKey)
                 .compact();
-    }
-
-    public Long getUserAuthIdFromToken(String token) {
-        Claims claims = Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-
-        return claims.get("userAuthId", Long.class);
     }
 }
