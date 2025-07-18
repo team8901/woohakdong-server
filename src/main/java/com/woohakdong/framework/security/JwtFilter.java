@@ -7,11 +7,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -36,16 +34,11 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         try {
-            Long userAuthId = jwtUtil.getUserAuthIdFromToken(token);
-
-            RequestUser requestUser = new RequestUser(userAuthId, List.of(new SimpleGrantedAuthority("ROLE_USER")));
-            var authentication = new UsernamePasswordAuthenticationToken(
-                    requestUser,
-                    null,
-                    requestUser.getAuthorities()
-            );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
+            RequestUser requestUser = jwtUtil.getRequestUserFromToken(token);
+            SecurityContextHolder.getContext()
+                    .setAuthentication(
+                            new UsernamePasswordAuthenticationToken(requestUser, null, requestUser.getAuthorities())
+                    );
         } catch (CustomAuthException e) {
             authenticationEntryPoint.commence(request, response, e);
             return;

@@ -3,6 +3,7 @@ package com.woohakdong.utils;
 import com.woohakdong.domain.auth.model.UserAuthRole;
 import com.woohakdong.exception.CustomAuthException;
 import com.woohakdong.exception.CustomErrorInfo;
+import com.woohakdong.framework.security.RequestUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -30,23 +31,17 @@ public class JwtUtil {
      * 토큰에서 userAuthId를 추출합니다. 내부적으로 토큰 유효성 검사를 수행합니다.
      *
      * @param token JWT 토큰
-     * @return userAuthId
+     * @return
      * @throws CustomAuthException 토큰이 유효하지 않은 경우
      */
-    public Long getUserAuthIdFromToken(String token) {
-        return getClaims(token).get("userAuthId", Long.class);
+    public RequestUser getRequestUserFromToken(String token) {
+        Claims claims = getClaims(token);
+        return new RequestUser(
+                claims.get("userAuthId", Long.class),
+                UserAuthRole.valueOf(claims.get("role", String.class))
+        );
     }
 
-    /**
-     * 토큰의 유효성을 검사합니다.
-     *
-     * @param token JWT 토큰
-     * @throws CustomAuthException 토큰이 유효하지 않은 경우 (만료, 형식 오류 등)
-     */
-    public void validateToken(String token) {
-        // getClaims 내부에서 모든 검증(만료 포함)을 처리하므로, 호출만으로 검증이 완료됩니다.
-        getClaims(token);
-    }
 
     /**
      * 토큰을 파싱하여 클레임(Payload)을 반환하고, 과정에서 발생하는 예외를 처리합니다.
