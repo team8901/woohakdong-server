@@ -1,7 +1,7 @@
 package com.woohakdong.domain.club.domain;
 
-import static com.woohakdong.framework.exception.CustomErrorInfo.CONFLICT_ALREADY_JOINED_CLUB;
-import static com.woohakdong.framework.exception.CustomErrorInfo.NOT_FOUND_CLUB;
+import static com.woohakdong.exception.CustomErrorInfo.CONFLICT_ALREADY_JOINED_CLUB;
+import static com.woohakdong.exception.CustomErrorInfo.NOT_FOUND_CLUB;
 
 import com.woohakdong.domain.club.infrastructure.storage.ClubMemberShipRepository;
 import com.woohakdong.domain.club.infrastructure.storage.ClubRepository;
@@ -9,7 +9,7 @@ import com.woohakdong.domain.club.model.ClubEntity;
 import com.woohakdong.domain.club.model.ClubMembershipEntity;
 import com.woohakdong.domain.club.model.ClubRegisterCommand;
 import com.woohakdong.domain.user.model.UserProfileEntity;
-import com.woohakdong.framework.exception.CustomException;
+import com.woohakdong.exception.CustomException;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

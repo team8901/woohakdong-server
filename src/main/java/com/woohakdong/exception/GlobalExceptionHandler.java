@@ -1,7 +1,7 @@
-package com.woohakdong.framework.exception;
+package com.woohakdong.exception;
 
-import static com.woohakdong.framework.exception.CustomErrorInfo.BAD_REQUEST_INVALID_PARAMETER;
-import static com.woohakdong.framework.exception.CustomErrorInfo.INTERNAL_SERVER_ERROR;
+import static com.woohakdong.exception.CustomErrorInfo.BAD_REQUEST_INVALID_PARAMETER;
+import static com.woohakdong.exception.CustomErrorInfo.INTERNAL_SERVER_ERROR;
 
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

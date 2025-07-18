@@ -1,4 +1,4 @@
-package com.woohakdong.framework.exception;
+package com.woohakdong.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

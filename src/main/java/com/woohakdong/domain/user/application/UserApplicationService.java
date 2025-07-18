@@ -1,14 +1,14 @@
 package com.woohakdong.domain.user.application;
 
-import static com.woohakdong.framework.exception.CustomErrorInfo.CONFLICT_ALREADY_EXISTING_USER_PROFILE;
-import static com.woohakdong.framework.exception.CustomErrorInfo.NOT_FOUND_USER_PROFILE;
+import static com.woohakdong.exception.CustomErrorInfo.CONFLICT_ALREADY_EXISTING_USER_PROFILE;
+import static com.woohakdong.exception.CustomErrorInfo.NOT_FOUND_USER_PROFILE;
 
 import com.woohakdong.domain.auth.infrastructure.storage.repository.UserAuthRepository;
 import com.woohakdong.domain.auth.model.UserAuthEntity;
 import com.woohakdong.domain.user.infrastructure.storage.repository.UserProfileRepository;
 import com.woohakdong.domain.user.model.UserProfileCreateCommand;
 import com.woohakdong.domain.user.model.UserProfileEntity;
-import com.woohakdong.framework.exception.CustomException;
+import com.woohakdong.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

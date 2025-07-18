@@ -1,4 +1,4 @@
-package com.woohakdong.framework.exception;
+package com.woohakdong.exception;
 
 public record ErrorResponse(
         String message,
