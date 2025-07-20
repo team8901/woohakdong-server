@@ -1,6 +1,7 @@
 package com.woohakdong.facade;
 
 import com.woohakdong.controller.dto.request.ClubRegisterRequest;
+import com.woohakdong.controller.dto.response.ClubIdResponse;
 import com.woohakdong.domain.club.application.ClubApplicationService;
 import com.woohakdong.domain.club.model.ClubRegisterCommand;
 import com.woohakdong.domain.user.application.UserApplicationService;
@@ -15,9 +16,9 @@ public class ClubFacade {
     private final UserApplicationService userApplicationService;
     private final ClubApplicationService clubApplicationService;
 
-    public Long registerNewClub(Long userAuthId, ClubRegisterRequest request) {
+    public ClubIdResponse registerNewClub(Long userAuthId, ClubRegisterRequest request) {
         UserProfileEntity userProfile = userApplicationService.getProfileWithAuthId(userAuthId);
         ClubRegisterCommand command = request.toCommand();
-        return clubApplicationService.registerNewClub(command, userProfile);
+        return ClubIdResponse.of(clubApplicationService.registerNewClub(command, userProfile));
     }
 }

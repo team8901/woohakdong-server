@@ -13,6 +13,7 @@ import com.woohakdong.exception.CustomException;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,12 +22,14 @@ public class ClubDomainService {
     private final ClubRepository clubRepository;
     private final ClubMemberShipRepository clubMemberShipRepository;
 
+    @Transactional
     public Long registerNewClub(ClubRegisterCommand command) {
         ClubEntity newClub = ClubEntity.create(command, LocalDate.now());
         ClubEntity savedClub = clubRepository.save(newClub);
         return savedClub.getId();
     }
 
+    @Transactional
     public void assignClubOwner(Long clubId, UserProfileEntity userProfile) {
         ClubEntity club = clubRepository.findById(clubId).orElseThrow(
                 () -> new CustomException(NOT_FOUND_CLUB)
