@@ -9,7 +9,10 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.security.SecurityScheme.Type;
 import io.swagger.v3.oas.models.servers.Server;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,13 +22,21 @@ public class SwaggerConfig {
     private static final String LOCAL_HOST_URL = "http://localhost:8080";
     private static final String DEV_HOST_URL = "https://woohakdong.jalju.com";
 
+    /**
+     * 보안을 적용하지 않을 API 목록을 정의합니다. 컨트롤러 이름, 메서드 이름을 키와 값으로 사용합니다.
+     * <p>
+     * "AnotherController", List.of("publicMethod1","publicMethod2")
+     */
+    private static final Map<String, List<String>> EXEMPT_APIS = Map.of(
+            "AuthController", List.of("socialLogin")
+    );
+
     @Bean
     public OpenAPI openAPI() {
         Info info = new Info()
                 .title("Woohakdong Server API")
                 .description("우학동 서버 API 명세서")
-                .version("0.0.1");
-
+                .version("1.0.0");
 
         SecurityScheme securityScheme = new SecurityScheme()
                 .name("Authorization")
@@ -50,8 +61,25 @@ public class SwaggerConfig {
 
         return new OpenAPI()
                 .components(components)
-                .servers(List.of(localServer, devServer))
                 .addSecurityItem(securityRequirement)
+                .servers(List.of(localServer, devServer))
                 .info(info);
+    }
+
+    /**
+     * 특정 API의 security 요구사항을 제거하는 커스터마이저입니다.
+     */
+    @Bean
+    public OperationCustomizer removeSecurity() {
+        return (operation, handlerMethod) -> {
+            String controllerName = handlerMethod.getBeanType().getSimpleName();
+            String methodName = handlerMethod.getMethod().getName();
+
+            if (EXEMPT_APIS.containsKey(controllerName) && EXEMPT_APIS.get(controllerName).contains(methodName)) {
+                operation.setSecurity(new ArrayList<>());
+            }
+
+            return operation;
+        };
     }
 }
