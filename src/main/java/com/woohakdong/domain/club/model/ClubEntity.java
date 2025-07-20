@@ -7,6 +7,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
@@ -35,8 +37,8 @@ public class ClubEntity {
     private String groupChatPassword; // 채팅방 비밀번호
     private Integer dues; // 회비
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_user_profile_id")
     private UserProfileEntity owner; // 소유자
 
     private LocalDate subscriptionStartDate; // 구독 시작일
