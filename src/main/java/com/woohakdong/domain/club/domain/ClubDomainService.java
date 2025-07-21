@@ -11,12 +11,14 @@ import com.woohakdong.domain.club.model.ClubRegisterCommand;
 import com.woohakdong.domain.user.model.UserProfileEntity;
 import com.woohakdong.exception.CustomException;
 import java.time.LocalDate;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ClubDomainService {
 
     private final ClubRepository clubRepository;
@@ -42,5 +44,14 @@ public class ClubDomainService {
 
         clubMemberShipRepository.save(clubMembership);
         club.updateOwner(userProfile);
+    }
+
+    public List<ClubEntity> findJoinedClubs(UserProfileEntity userProfile) {
+        List<ClubMembershipEntity> joinedClubMemberShip = clubMemberShipRepository.findAllByUserProfile(userProfile);
+
+        // TODO : querydsl로 변경
+        return joinedClubMemberShip.stream()
+                .map(ClubMembershipEntity::getClub)
+                .toList();
     }
 }

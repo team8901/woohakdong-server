@@ -2,8 +2,10 @@ package com.woohakdong.domain.club.application;
 
 import com.woohakdong.domain.club.domain.ClubDomainService;
 import com.woohakdong.domain.club.domain.ClubRegistrationPolicy;
+import com.woohakdong.domain.club.model.ClubEntity;
 import com.woohakdong.domain.club.model.ClubRegisterCommand;
 import com.woohakdong.domain.user.model.UserProfileEntity;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,5 +23,9 @@ public class ClubApplicationService {
         Long clubId = clubDomainService.registerNewClub(command);
         clubDomainService.assignClubOwner(clubId, userProfile);
         return clubId;
+    }
+
+    public List<ClubEntity> getJoinedClubs(UserProfileEntity userProfile) {
+        return clubDomainService.findJoinedClubs(userProfile);
     }
 }

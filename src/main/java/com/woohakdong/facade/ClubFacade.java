@@ -2,10 +2,14 @@ package com.woohakdong.facade;
 
 import com.woohakdong.controller.dto.request.ClubRegisterRequest;
 import com.woohakdong.controller.dto.response.ClubIdResponse;
+import com.woohakdong.controller.dto.response.ClubInfoResponse;
+import com.woohakdong.controller.dto.response.ListWrapper;
 import com.woohakdong.domain.club.application.ClubApplicationService;
+import com.woohakdong.domain.club.model.ClubEntity;
 import com.woohakdong.domain.club.model.ClubRegisterCommand;
 import com.woohakdong.domain.user.application.UserApplicationService;
 import com.woohakdong.domain.user.model.UserProfileEntity;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -20,5 +24,14 @@ public class ClubFacade {
         UserProfileEntity userProfile = userApplicationService.getProfileWithAuthId(userAuthId);
         ClubRegisterCommand command = request.toCommand();
         return ClubIdResponse.of(clubApplicationService.registerNewClub(command, userProfile));
+    }
+
+    public ListWrapper<ClubInfoResponse> getJoinedClubs(Long userAuthId) {
+        UserProfileEntity userProfile = userApplicationService.getProfileWithAuthId(userAuthId);
+        List<ClubEntity> clubs = clubApplicationService.getJoinedClubs(userProfile);
+
+        return ListWrapper.of(clubs.stream()
+                .map(ClubInfoResponse::of)
+                .toList());
     }
 }
