@@ -29,9 +29,11 @@ while true; do
   REMOTE_HASH=$(git rev-parse "origin/$BRANCH")
 
   if [ "$LOCAL_HASH" != "$REMOTE_HASH" ]; then
-    echo "[INFO] Change detected. Pulling latest code and redeploying..."
+    echo "[INFO] Change detected. Resetting to latest code and redeploying..."
 
-    git pull origin "$BRANCH"
+    git reset --hard "origin/$BRANCH"
+
+    chmod +x auto_deploy.sh
 
     LAST_COMMIT_TITLE=$(git log -1 --pretty=%s)
 
