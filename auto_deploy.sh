@@ -33,6 +33,8 @@ while true; do
 
     git pull origin "$BRANCH"
 
+    LAST_COMMIT_TITLE=$(git log -1 --pretty=%s)
+
     echo "[INFO] Building Docker image..."
     if ! docker build -t "$IMAGE_NAME" .; then
       send_slack_message "❌ Docker 이미지 빌드 실패"
@@ -45,7 +47,9 @@ while true; do
 
     echo "[INFO] Starting new container..."
     docker run -d -p 80:"$PORT" --name "$CONTAINER_NAME" "$IMAGE_NAME"
-    send_slack_message "🚀 배포 완료! 최신 코드로 서비스 중."
+
+    MESSAGE="🚀 배포 완료! 최신 코드로 서비스 중.\n> ${LAST_COMMIT_TITLE}"
+    send_slack_message "$MESSAGE"
   else
     echo "[INFO] No changes."
   fi
