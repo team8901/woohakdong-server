@@ -2,6 +2,7 @@ package com.woohakdong.domain.user.model;
 
 
 import com.woohakdong.domain.auth.model.UserAuthEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -27,12 +28,23 @@ public class UserProfileEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "name", nullable = false)
     private String name;
-    private String nickName;
+
+    @Column(name = "nickname", nullable = false)
+    private String nickname;
+
+    @Column(name = "email", nullable = false)
     private String email;
+
+    @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
+
+    @Column(name = "student_id")
     private String studentId;
 
+    @Column(name = "gender")
     @Enumerated(value = EnumType.STRING)
     private Gender gender;
 

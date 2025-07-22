@@ -7,6 +7,7 @@ import com.woohakdong.facade.UserFacade;
 import com.woohakdong.framework.security.RequestUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +34,7 @@ public class UserController {
     @Operation(summary = "프로필 정보 입력", description = "소셜 로그인이 완료된 사용자의 프로필 정보를 입력합니다.")
     @PostMapping("/profiles")
     public UserProfileIdResponse createNewProfile(@AuthenticationPrincipal RequestUser user,
-                                                  @RequestBody UserProfileCreateRequest request) {
+                                                  @RequestBody @Valid UserProfileCreateRequest request) {
         Long userAuthId = user.getUserAuthId();
         return userFacade.createProfileWithAuthId(userAuthId, request);
     }

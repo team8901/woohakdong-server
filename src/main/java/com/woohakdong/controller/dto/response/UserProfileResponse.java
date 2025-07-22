@@ -13,7 +13,7 @@ public record UserProfileResponse(
     public static UserProfileResponse from(UserProfileEntity userProfile) {
         return new UserProfileResponse(
                 userProfile.getName(),
-                userProfile.getNickName(),
+                userProfile.getNickname(),
                 userProfile.getEmail(),
                 userProfile.getPhoneNumber(),
                 userProfile.getGender()
