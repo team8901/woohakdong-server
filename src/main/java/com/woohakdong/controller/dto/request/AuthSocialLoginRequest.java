@@ -1,23 +1,21 @@
 package com.woohakdong.controller.dto.request;
 
 import com.woohakdong.domain.auth.model.AuthSocialLoginCommand;
-import jakarta.validation.constraints.AssertTrue;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 
 public record AuthSocialLoginRequest(
+
+        @Schema(example = "google", description = "소셜 로그인 제공자 (예: google, kakao, naver)")
+        @NotBlank(message = "소셜 로그인 제공자는 필수입니다.")
         String provider,
+
+        @Schema(example = "your-access-token", description = "소셜 로그인 제공자의 액세스 토큰")
+        @NotBlank(message = "소셜 로그인 제공자의 액세스 토큰은 필수입니다.")
         String providerAccessToken
 ) {
     public AuthSocialLoginCommand toCommandModel() {
         return new AuthSocialLoginCommand(provider, providerAccessToken);
     }
 
-    @AssertTrue(message = "provider는 반드시 입력되어야합니다.")
-    private boolean _isProviderValid() {
-        return provider != null && !provider.isBlank();
-    }
-
-    @AssertTrue(message = "providerAccessToken는 반드시 입력되어야합니다.")
-    private boolean _isProviderAccessTokenValid() {
-        return providerAccessToken != null && !providerAccessToken.isBlank();
-    }
 }
