@@ -1,11 +1,13 @@
 package com.woohakdong.facade;
 
+import com.woohakdong.controller.dto.request.ClubNameValidateRequest;
 import com.woohakdong.controller.dto.request.ClubRegisterRequest;
 import com.woohakdong.controller.dto.response.ClubIdResponse;
 import com.woohakdong.controller.dto.response.ClubInfoResponse;
 import com.woohakdong.controller.dto.response.ListWrapper;
 import com.woohakdong.domain.club.application.ClubApplicationService;
 import com.woohakdong.domain.club.model.ClubEntity;
+import com.woohakdong.domain.club.model.ClubNameValidateQuery;
 import com.woohakdong.domain.club.model.ClubRegisterCommand;
 import com.woohakdong.domain.user.application.UserApplicationService;
 import com.woohakdong.domain.user.model.UserProfileEntity;
@@ -33,5 +35,10 @@ public class ClubFacade {
         return ListWrapper.of(clubs.stream()
                 .map(ClubInfoResponse::of)
                 .toList());
+    }
+
+    public void validateClubName(ClubNameValidateRequest request) {
+        ClubNameValidateQuery query = request.toQueryModel();
+        clubApplicationService.validateClubName(query);
     }
 }

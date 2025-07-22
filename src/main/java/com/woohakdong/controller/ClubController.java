@@ -1,5 +1,6 @@
 package com.woohakdong.controller;
 
+import com.woohakdong.controller.dto.request.ClubNameValidateRequest;
 import com.woohakdong.controller.dto.request.ClubRegisterRequest;
 import com.woohakdong.controller.dto.response.ClubIdResponse;
 import com.woohakdong.controller.dto.response.ClubInfoResponse;
@@ -38,5 +39,11 @@ public class ClubController {
     public ListWrapper<ClubInfoResponse> getJoinedClubs(@AuthenticationPrincipal RequestUser user) {
         Long userAuthId = user.getUserAuthId();
         return clubFacade.getJoinedClubs(userAuthId);
+    }
+
+    @Operation(summary = "동아리 이름 중복 검사", description = "동아리 이름의 중복 여부를 확인합니다.")
+    @PostMapping("/validate-name")
+    public void validateClubName(@Valid @RequestBody ClubNameValidateRequest request) {
+        clubFacade.validateClubName(request);
     }
 }
