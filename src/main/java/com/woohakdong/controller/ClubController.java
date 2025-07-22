@@ -8,6 +8,7 @@ import com.woohakdong.facade.ClubFacade;
 import com.woohakdong.framework.security.RequestUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,8 @@ public class ClubController {
 
     @Operation(summary = "동아리 등록", description = "새로운 동아리를 등록합니다.")
     @PostMapping
-    public ClubIdResponse registerNewClub(@AuthenticationPrincipal RequestUser user, @RequestBody ClubRegisterRequest request) {
+    public ClubIdResponse registerNewClub(@AuthenticationPrincipal RequestUser user,
+                                          @Valid @RequestBody ClubRegisterRequest request) {
         Long userAuthId = user.getUserAuthId();
         return clubFacade.registerNewClub(userAuthId, request);
     }

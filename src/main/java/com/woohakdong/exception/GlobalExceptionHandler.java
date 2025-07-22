@@ -35,9 +35,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(BAD_REQUEST_INVALID_PARAMETER.getStatusCode())
                 .body(ErrorResponse.of(
-                        BAD_REQUEST_INVALID_PARAMETER.getMessage(),
-                        BAD_REQUEST_INVALID_PARAMETER.getErrorCode(),
-                        String.join(", ", errorMessages))
+                                String.join(", ", errorMessages),
+                                BAD_REQUEST_INVALID_PARAMETER.getErrorCode()
+                        )
                 );
     }
 
