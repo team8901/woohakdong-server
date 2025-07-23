@@ -1,10 +1,11 @@
 package com.woohakdong.domain.club.application;
 
 import com.woohakdong.domain.club.domain.ClubDomainService;
-import com.woohakdong.domain.club.domain.ClubRegistrationPolicy;
+import com.woohakdong.domain.club.domain.ClubInformationPolicy;
 import com.woohakdong.domain.club.model.ClubEntity;
 import com.woohakdong.domain.club.model.ClubNameValidateQuery;
 import com.woohakdong.domain.club.model.ClubRegisterCommand;
+import com.woohakdong.domain.club.model.ClubUpdateCommand;
 import com.woohakdong.domain.user.model.UserProfileEntity;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ClubApplicationService {
 
     private final ClubDomainService clubDomainService;
-    private final ClubRegistrationPolicy clubRegistrationPolicy;
+    private final ClubInformationPolicy clubInformationPolicy;
 
     @Transactional
     public Long registerNewClub(ClubRegisterCommand command, UserProfileEntity userProfile) {
-        clubRegistrationPolicy.validateClubName(command.name(), command.nameEn());
+        clubInformationPolicy.validateClubName(command.name(), command.nameEn());
         Long clubId = clubDomainService.registerNewClub(command);
         clubDomainService.assignClubOwner(clubId, userProfile);
         return clubId;
@@ -32,6 +33,14 @@ public class ClubApplicationService {
     }
 
     public void validateClubName(ClubNameValidateQuery query) {
-        clubRegistrationPolicy.validateClubName(query.name(), query.nameEn());
+        clubInformationPolicy.validateClubName(query.name(), query.nameEn());
+    }
+
+    @Transactional
+    public void updateClubInfo(UserProfileEntity userProfile, ClubUpdateCommand command, Long clubId) {
+        ClubEntity club = clubDomainService.getById(clubId);
+        club.verifyOwner(userProfile);
+        club.updateInfo(command);
+        clubDomainService.updateClub(club);
     }
 }

@@ -54,4 +54,14 @@ public class ClubDomainService {
                 .map(ClubMembershipEntity::getClub)
                 .toList();
     }
+
+    public ClubEntity getById(Long clubId) {
+        return clubRepository.findById(clubId).orElseThrow(
+                () -> new CustomException(NOT_FOUND_CLUB)
+        );
+    }
+
+    public void updateClub(ClubEntity club) {
+        clubRepository.save(club);
+    }
 }

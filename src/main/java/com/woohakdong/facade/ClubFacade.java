@@ -2,6 +2,7 @@ package com.woohakdong.facade;
 
 import com.woohakdong.controller.dto.request.ClubNameValidateRequest;
 import com.woohakdong.controller.dto.request.ClubRegisterRequest;
+import com.woohakdong.controller.dto.request.ClubUpdateRequest;
 import com.woohakdong.controller.dto.response.ClubIdResponse;
 import com.woohakdong.controller.dto.response.ClubInfoResponse;
 import com.woohakdong.controller.dto.response.ListWrapper;
@@ -9,6 +10,7 @@ import com.woohakdong.domain.club.application.ClubApplicationService;
 import com.woohakdong.domain.club.model.ClubEntity;
 import com.woohakdong.domain.club.model.ClubNameValidateQuery;
 import com.woohakdong.domain.club.model.ClubRegisterCommand;
+import com.woohakdong.domain.club.model.ClubUpdateCommand;
 import com.woohakdong.domain.user.application.UserApplicationService;
 import com.woohakdong.domain.user.model.UserProfileEntity;
 import java.util.List;
@@ -40,5 +42,11 @@ public class ClubFacade {
     public void validateClubName(ClubNameValidateRequest request) {
         ClubNameValidateQuery query = request.toQueryModel();
         clubApplicationService.validateClubName(query);
+    }
+
+    public void updateClubInfo(Long userAuthId, Long clubId, ClubUpdateRequest request) {
+        UserProfileEntity userProfile = userApplicationService.getProfileWithAuthId(userAuthId);
+        ClubUpdateCommand command = request.toCommand();
+        clubApplicationService.updateClubInfo(userProfile, command, clubId);
     }
 }

@@ -2,6 +2,7 @@ package com.woohakdong.controller;
 
 import com.woohakdong.controller.dto.request.ClubNameValidateRequest;
 import com.woohakdong.controller.dto.request.ClubRegisterRequest;
+import com.woohakdong.controller.dto.request.ClubUpdateRequest;
 import com.woohakdong.controller.dto.response.ClubIdResponse;
 import com.woohakdong.controller.dto.response.ClubInfoResponse;
 import com.woohakdong.controller.dto.response.ListWrapper;
@@ -13,7 +14,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,5 +48,15 @@ public class ClubController {
     @PostMapping("/validate-name")
     public void validateClubName(@Valid @RequestBody ClubNameValidateRequest request) {
         clubFacade.validateClubName(request);
+    }
+
+    @Operation(summary = "동아리 정보 수정", description = "동아리 정보를 수정합니다.")
+    @PutMapping("/{clubId}")
+    public void updateClubInfo(@AuthenticationPrincipal RequestUser user,
+                               @PathVariable Long clubId,
+                               @Valid @RequestBody ClubUpdateRequest request
+    ) {
+        Long userAuthId = user.getUserAuthId();
+        clubFacade.updateClubInfo(userAuthId, clubId, request);
     }
 }

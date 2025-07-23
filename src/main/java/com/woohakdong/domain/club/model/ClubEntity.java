@@ -1,6 +1,9 @@
 package com.woohakdong.domain.club.model;
 
+import static com.woohakdong.exception.CustomErrorInfo.FORBIDDEN_CLUB_OWNER_ONLY;
+
 import com.woohakdong.domain.user.model.UserProfileEntity;
+import com.woohakdong.exception.CustomException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -84,5 +87,21 @@ public class ClubEntity {
 
     public void updateOwner(UserProfileEntity userProfile) {
         this.owner = userProfile;
+    }
+
+    public void verifyOwner(UserProfileEntity userProfile) {
+        if (!this.owner.equals(userProfile)) {
+            throw new CustomException(FORBIDDEN_CLUB_OWNER_ONLY);
+        }
+    }
+
+    public void updateInfo(ClubUpdateCommand command) {
+        this.description = command.description();
+        this.thumbnailImageUrl = command.thumbnailImageUrl();
+        this.bannerImageUrl = command.bannerImageUrl();
+        this.roomInfo = command.roomInfo();
+        this.groupChatLink = command.groupChatLink();
+        this.groupChatPassword = command.groupChatPassword();
+        this.dues = command.dues();
     }
 }

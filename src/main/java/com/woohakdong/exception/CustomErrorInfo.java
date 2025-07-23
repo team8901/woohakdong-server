@@ -29,6 +29,7 @@ public enum CustomErrorInfo {
 
     // 403 Forbidden
     FORBIDDEN_UNAUTHORIZED(403, "접근 권한이 없습니다.", "403001"),
+    FORBIDDEN_CLUB_OWNER_ONLY(403, "동아리 소유자만 접근할 수 있습니다.", "403002"),
 
 
     // 404 Not Found
