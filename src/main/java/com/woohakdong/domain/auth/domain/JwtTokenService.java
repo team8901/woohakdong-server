@@ -17,7 +17,7 @@ public class JwtTokenService {
         Long userAuthId = userAuth.getId();
         UserAuthRole userAuthRole = userAuth.getRole();
 
-        String accessToken = jwtUtil.createToken("access", userAuthId, userAuthRole, 600000L);
+        String accessToken = jwtUtil.createToken("access", userAuthId, userAuthRole, 60000000000000L);
         String refreshToken = jwtUtil.createToken("refresh", userAuthId, userAuthRole, 86400000L);
 
         // TODO : Refresh 저장

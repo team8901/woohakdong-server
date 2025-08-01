@@ -2,10 +2,7 @@ package com.woohakdong.domain.club.application;
 
 import com.woohakdong.domain.club.domain.ClubDomainService;
 import com.woohakdong.domain.club.domain.ClubInformationPolicy;
-import com.woohakdong.domain.club.model.ClubEntity;
-import com.woohakdong.domain.club.model.ClubNameValidateQuery;
-import com.woohakdong.domain.club.model.ClubRegisterCommand;
-import com.woohakdong.domain.club.model.ClubUpdateCommand;
+import com.woohakdong.domain.club.model.*;
 import com.woohakdong.domain.user.model.UserProfileEntity;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +36,8 @@ public class ClubApplicationService {
     @Transactional
     public void updateClubInfo(UserProfileEntity userProfile, ClubUpdateCommand command, Long clubId) {
         ClubEntity club = clubDomainService.getById(clubId);
-        club.verifyOwner(userProfile);
+        ClubMembershipEntity clubMembership = clubDomainService.getClubMembership(userProfile);
+        club.verifyOwner(clubMembership);
         club.updateInfo(command);
         clubDomainService.updateClub(club);
     }

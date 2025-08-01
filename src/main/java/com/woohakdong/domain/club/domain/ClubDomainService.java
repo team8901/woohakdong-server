@@ -1,8 +1,5 @@
 package com.woohakdong.domain.club.domain;
 
-import static com.woohakdong.exception.CustomErrorInfo.CONFLICT_ALREADY_JOINED_CLUB;
-import static com.woohakdong.exception.CustomErrorInfo.NOT_FOUND_CLUB;
-
 import com.woohakdong.domain.club.infrastructure.storage.ClubMemberShipRepository;
 import com.woohakdong.domain.club.infrastructure.storage.ClubRepository;
 import com.woohakdong.domain.club.model.ClubEntity;
@@ -15,6 +12,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.woohakdong.exception.CustomErrorInfo.*;
 
 @Service
 @RequiredArgsConstructor
@@ -37,13 +36,15 @@ public class ClubDomainService {
                 () -> new CustomException(NOT_FOUND_CLUB)
         );
 
-        ClubMembershipEntity clubMembership = ClubMembershipEntity.createClubOwner(club, userProfile);
         if (clubMemberShipRepository.existsByClubAndUserProfile(club, userProfile)) {
             throw new CustomException(CONFLICT_ALREADY_JOINED_CLUB);
         }
 
+        ClubMembershipEntity clubMembership = ClubMembershipEntity.createClubOwner(club, userProfile);
         clubMemberShipRepository.save(clubMembership);
-        club.updateOwner(userProfile);
+
+        club.updateOwner(clubMembership);
+        clubRepository.save(club);
     }
 
     public List<ClubEntity> findJoinedClubs(UserProfileEntity userProfile) {
@@ -63,5 +64,11 @@ public class ClubDomainService {
 
     public void updateClub(ClubEntity club) {
         clubRepository.save(club);
+    }
+
+    public ClubMembershipEntity getClubMembership(UserProfileEntity userProfile) {
+        return clubMemberShipRepository.findByUserProfile(userProfile).orElseThrow(
+                () -> new CustomException(NOT_FOUND_CLUB_MEMBERSHIP)
+        );
     }
 }

@@ -58,8 +58,8 @@ public class ClubEntity {
     private Integer dues; // 회비
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_user_profile_id")
-    private UserProfileEntity owner; // 소유자
+    @JoinColumn(name = "owner_club_membership_id")
+    private ClubMembershipEntity owner; // 소유자
 
     @Column(name = "subscription_start_date", nullable = false)
     private LocalDate subscriptionStartDate; // 구독 시작일
@@ -85,12 +85,12 @@ public class ClubEntity {
         );
     }
 
-    public void updateOwner(UserProfileEntity userProfile) {
-        this.owner = userProfile;
+    public void updateOwner(ClubMembershipEntity clubMembership) {
+        this.owner = clubMembership;
     }
 
-    public void verifyOwner(UserProfileEntity userProfile) {
-        if (!this.owner.equals(userProfile)) {
+    public void verifyOwner(ClubMembershipEntity clubMembership) {
+        if (!this.owner.equals(clubMembership)) {
             throw new CustomException(FORBIDDEN_CLUB_OWNER_ONLY);
         }
     }
