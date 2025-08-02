@@ -15,5 +15,10 @@ spring:
     hibernate:
       ddl-auto: update
 
+  cloud:
+    aws:
+      s3:
+        bucket-name: ${AWS_S3_BUCKET_NAME:woohakdong_dummy_bucket}
+
 jwt:
   secret: ${JWT_SECRET:woohakdongwoohakdongwoohakdong1234}
