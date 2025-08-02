@@ -1,7 +1,5 @@
 package com.woohakdong.framework.config;
 
-import static io.swagger.v3.oas.models.security.SecurityScheme.In.HEADER;
-
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -9,12 +7,15 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.security.SecurityScheme.Type;
 import io.swagger.v3.oas.models.servers.Server;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static io.swagger.v3.oas.models.security.SecurityScheme.In.HEADER;
 
 @Configuration
 public class SwaggerConfig {
@@ -28,7 +29,8 @@ public class SwaggerConfig {
      * "AnotherController", List.of("publicMethod1","publicMethod2")
      */
     private static final Map<String, List<String>> EXEMPT_APIS = Map.of(
-            "AuthController", List.of("socialLogin")
+            "AuthController", List.of("socialLogin"),
+            "ClubController", List.of("searchClubs")
     );
 
     @Bean

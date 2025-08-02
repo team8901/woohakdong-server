@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -58,5 +59,14 @@ public class ClubController {
     ) {
         Long userAuthId = user.getUserAuthId();
         clubFacade.updateClubInfo(userAuthId, clubId, request);
+    }
+
+    @Operation(summary = "동아리 정보 검색", description = "동아리 정보를 검색합니다.")
+    @GetMapping("/search")
+    public ListWrapper<ClubInfoResponse> searchClubs(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String nameEn
+    ) {
+        return clubFacade.searchClubs(name, nameEn);
     }
 }

@@ -2,12 +2,18 @@ package com.woohakdong.domain.club.application;
 
 import com.woohakdong.domain.club.domain.ClubDomainService;
 import com.woohakdong.domain.club.domain.ClubInformationPolicy;
-import com.woohakdong.domain.club.model.*;
+import com.woohakdong.domain.club.model.ClubEntity;
+import com.woohakdong.domain.club.model.ClubInfoSearchQuery;
+import com.woohakdong.domain.club.model.ClubMembershipEntity;
+import com.woohakdong.domain.club.model.ClubNameValidateQuery;
+import com.woohakdong.domain.club.model.ClubRegisterCommand;
+import com.woohakdong.domain.club.model.ClubUpdateCommand;
 import com.woohakdong.domain.user.model.UserProfileEntity;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -40,5 +46,9 @@ public class ClubApplicationService {
         club.verifyOwner(clubMembership);
         club.updateInfo(command);
         clubDomainService.updateClub(club);
+    }
+
+    public List<ClubEntity> searchClubs(ClubInfoSearchQuery query) {
+        return clubDomainService.searchClubs(query);
     }
 }

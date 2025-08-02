@@ -24,6 +24,10 @@ public class SecurityConfig {
             "/v3/api-docs",
             "/swagger"
     };
+    public static final String[] PUBLIC_API_PATHS = {
+            "/api/auth/social-login",
+            "/api/clubs/search"
+    };
 
     private final JwtFilter jwtFilter;
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
@@ -38,7 +42,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(req -> req
                 .requestMatchers(SWAGGER_UI_PATHS).permitAll()
-                .requestMatchers("/api/auth/social-login").permitAll()
+                .requestMatchers(PUBLIC_API_PATHS).permitAll()
                 .anyRequest().authenticated()
         );
 

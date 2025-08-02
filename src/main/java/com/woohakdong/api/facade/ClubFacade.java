@@ -8,14 +8,16 @@ import com.woohakdong.api.dto.response.ClubInfoResponse;
 import com.woohakdong.api.dto.response.ListWrapper;
 import com.woohakdong.domain.club.application.ClubApplicationService;
 import com.woohakdong.domain.club.model.ClubEntity;
+import com.woohakdong.domain.club.model.ClubInfoSearchQuery;
 import com.woohakdong.domain.club.model.ClubNameValidateQuery;
 import com.woohakdong.domain.club.model.ClubRegisterCommand;
 import com.woohakdong.domain.club.model.ClubUpdateCommand;
 import com.woohakdong.domain.user.application.UserApplicationService;
 import com.woohakdong.domain.user.model.UserProfileEntity;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -48,5 +50,13 @@ public class ClubFacade {
         UserProfileEntity userProfile = userApplicationService.getProfileWithAuthId(userAuthId);
         ClubUpdateCommand command = request.toCommand();
         clubApplicationService.updateClubInfo(userProfile, command, clubId);
+    }
+
+    public ListWrapper<ClubInfoResponse> searchClubs(String name, String nameEn) {
+        ClubInfoSearchQuery query = ClubInfoSearchQuery.of(name, nameEn);
+        List<ClubEntity> clubs = clubApplicationService.searchClubs(query);
+        return ListWrapper.of(clubs.stream()
+                .map(ClubInfoResponse::of)
+                .toList());
     }
 }
