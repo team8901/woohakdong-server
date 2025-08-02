@@ -1,4 +1,4 @@
-package com.woohakdong.controller.dto.request;
+package com.woohakdong.api.dto.request;
 
 import com.woohakdong.domain.auth.model.AuthSocialLoginCommand;
 import io.swagger.v3.oas.annotations.media.Schema;

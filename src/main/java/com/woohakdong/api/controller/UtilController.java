@@ -1,8 +1,8 @@
-package com.woohakdong.controller;
+package com.woohakdong.api.controller;
 
-import com.woohakdong.controller.dto.response.PresignedUrlResponse;
+import com.woohakdong.api.dto.response.PresignedUrlResponse;
 import com.woohakdong.domain.util.model.ImageResourceType;
-import com.woohakdong.facade.UtilFacade;
+import com.woohakdong.api.facade.UtilFacade;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

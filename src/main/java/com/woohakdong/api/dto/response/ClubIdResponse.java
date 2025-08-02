@@ -1,4 +1,4 @@
-package com.woohakdong.controller.dto.response;
+package com.woohakdong.api.dto.response;
 
 public record ClubIdResponse(
         Long clubId

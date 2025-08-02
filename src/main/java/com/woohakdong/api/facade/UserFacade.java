@@ -1,8 +1,8 @@
-package com.woohakdong.facade;
+package com.woohakdong.api.facade;
 
-import com.woohakdong.controller.dto.request.UserProfileCreateRequest;
-import com.woohakdong.controller.dto.response.UserProfileIdResponse;
-import com.woohakdong.controller.dto.response.UserProfileResponse;
+import com.woohakdong.api.dto.request.UserProfileCreateRequest;
+import com.woohakdong.api.dto.response.UserProfileIdResponse;
+import com.woohakdong.api.dto.response.UserProfileResponse;
 import com.woohakdong.domain.user.application.UserApplicationService;
 import com.woohakdong.domain.user.model.UserProfileCreateCommand;
 import com.woohakdong.domain.user.model.UserProfileEntity;

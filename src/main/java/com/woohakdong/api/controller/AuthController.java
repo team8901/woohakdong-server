@@ -1,8 +1,8 @@
-package com.woohakdong.controller;
+package com.woohakdong.api.controller;
 
-import com.woohakdong.controller.dto.request.AuthSocialLoginRequest;
-import com.woohakdong.facade.AuthFacade;
-import com.woohakdong.controller.dto.response.AuthSocialLoginResponse;
+import com.woohakdong.api.dto.request.AuthSocialLoginRequest;
+import com.woohakdong.api.facade.AuthFacade;
+import com.woohakdong.api.dto.response.AuthSocialLoginResponse;
 import com.woohakdong.framework.security.RequestUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

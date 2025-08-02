@@ -1,11 +1,11 @@
-package com.woohakdong.facade;
+package com.woohakdong.api.facade;
 
-import com.woohakdong.controller.dto.request.ClubNameValidateRequest;
-import com.woohakdong.controller.dto.request.ClubRegisterRequest;
-import com.woohakdong.controller.dto.request.ClubUpdateRequest;
-import com.woohakdong.controller.dto.response.ClubIdResponse;
-import com.woohakdong.controller.dto.response.ClubInfoResponse;
-import com.woohakdong.controller.dto.response.ListWrapper;
+import com.woohakdong.api.dto.request.ClubNameValidateRequest;
+import com.woohakdong.api.dto.request.ClubRegisterRequest;
+import com.woohakdong.api.dto.request.ClubUpdateRequest;
+import com.woohakdong.api.dto.response.ClubIdResponse;
+import com.woohakdong.api.dto.response.ClubInfoResponse;
+import com.woohakdong.api.dto.response.ListWrapper;
 import com.woohakdong.domain.club.application.ClubApplicationService;
 import com.woohakdong.domain.club.model.ClubEntity;
 import com.woohakdong.domain.club.model.ClubNameValidateQuery;

@@ -1,9 +1,9 @@
-package com.woohakdong.controller;
+package com.woohakdong.api.controller;
 
-import com.woohakdong.controller.dto.request.UserProfileCreateRequest;
-import com.woohakdong.controller.dto.response.UserProfileIdResponse;
-import com.woohakdong.controller.dto.response.UserProfileResponse;
-import com.woohakdong.facade.UserFacade;
+import com.woohakdong.api.dto.request.UserProfileCreateRequest;
+import com.woohakdong.api.dto.response.UserProfileIdResponse;
+import com.woohakdong.api.dto.response.UserProfileResponse;
+import com.woohakdong.api.facade.UserFacade;
 import com.woohakdong.framework.security.RequestUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

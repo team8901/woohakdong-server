@@ -1,7 +1,7 @@
-package com.woohakdong.facade;
+package com.woohakdong.api.facade;
 
-import com.woohakdong.controller.dto.request.AuthSocialLoginRequest;
-import com.woohakdong.controller.dto.response.AuthSocialLoginResponse;
+import com.woohakdong.api.dto.request.AuthSocialLoginRequest;
+import com.woohakdong.api.dto.response.AuthSocialLoginResponse;
 import com.woohakdong.domain.auth.application.AuthApplicationService;
 import com.woohakdong.domain.auth.model.AuthSocialLoginCommand;
 import lombok.RequiredArgsConstructor;

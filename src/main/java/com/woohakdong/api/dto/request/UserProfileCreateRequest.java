@@ -1,4 +1,4 @@
-package com.woohakdong.controller.dto.request;
+package com.woohakdong.api.dto.request;
 
 import com.woohakdong.domain.user.model.Gender;
 import com.woohakdong.domain.user.model.UserProfileCreateCommand;

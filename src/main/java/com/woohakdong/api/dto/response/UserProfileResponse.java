@@ -1,4 +1,4 @@
-package com.woohakdong.controller.dto.response;
+package com.woohakdong.api.dto.response;
 
 import com.woohakdong.domain.user.model.Gender;
 import com.woohakdong.domain.user.model.UserProfileEntity;

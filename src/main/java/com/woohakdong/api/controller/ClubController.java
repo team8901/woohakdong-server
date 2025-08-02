@@ -1,12 +1,12 @@
-package com.woohakdong.controller;
+package com.woohakdong.api.controller;
 
-import com.woohakdong.controller.dto.request.ClubNameValidateRequest;
-import com.woohakdong.controller.dto.request.ClubRegisterRequest;
-import com.woohakdong.controller.dto.request.ClubUpdateRequest;
-import com.woohakdong.controller.dto.response.ClubIdResponse;
-import com.woohakdong.controller.dto.response.ClubInfoResponse;
-import com.woohakdong.controller.dto.response.ListWrapper;
-import com.woohakdong.facade.ClubFacade;
+import com.woohakdong.api.dto.request.ClubNameValidateRequest;
+import com.woohakdong.api.dto.request.ClubRegisterRequest;
+import com.woohakdong.api.dto.request.ClubUpdateRequest;
+import com.woohakdong.api.dto.response.ClubIdResponse;
+import com.woohakdong.api.dto.response.ClubInfoResponse;
+import com.woohakdong.api.dto.response.ListWrapper;
+import com.woohakdong.api.facade.ClubFacade;
 import com.woohakdong.framework.security.RequestUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
