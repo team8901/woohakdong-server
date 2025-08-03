@@ -1,12 +1,15 @@
 package com.woohakdong.api.facade;
 
+import com.woohakdong.api.dto.request.ClubApplicationFormCreateRequest;
 import com.woohakdong.api.dto.request.ClubNameValidateRequest;
 import com.woohakdong.api.dto.request.ClubRegisterRequest;
 import com.woohakdong.api.dto.request.ClubUpdateRequest;
+import com.woohakdong.api.dto.response.ClubApplicationFormIdResponse;
 import com.woohakdong.api.dto.response.ClubIdResponse;
 import com.woohakdong.api.dto.response.ClubInfoResponse;
 import com.woohakdong.api.dto.response.ListWrapper;
 import com.woohakdong.domain.club.application.ClubApplicationService;
+import com.woohakdong.domain.club.model.ClubApplicationFormCreateCommand;
 import com.woohakdong.domain.club.model.ClubEntity;
 import com.woohakdong.domain.club.model.ClubInfoSearchQuery;
 import com.woohakdong.domain.club.model.ClubNameValidateQuery;
@@ -58,5 +61,13 @@ public class ClubFacade {
         return ListWrapper.of(clubs.stream()
                 .map(ClubInfoResponse::of)
                 .toList());
+    }
+
+    public ClubApplicationFormIdResponse createClubApplicationForm(Long clubId, Long userAuthId,
+                                                                   ClubApplicationFormCreateRequest request) {
+        ClubApplicationFormCreateCommand command = request.toCommandModel();
+        UserProfileEntity userProfile = userApplicationService.getProfileWithAuthId(userAuthId);
+        Long clubApplicationFormId = clubApplicationService.createClubApplicationForm(clubId, userProfile, command);
+        return ClubApplicationFormIdResponse.of(clubApplicationFormId);
     }
 }

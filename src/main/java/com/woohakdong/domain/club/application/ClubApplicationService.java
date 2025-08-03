@@ -2,6 +2,9 @@ package com.woohakdong.domain.club.application;
 
 import com.woohakdong.domain.club.domain.ClubDomainService;
 import com.woohakdong.domain.club.domain.ClubInformationPolicy;
+import com.woohakdong.domain.club.infrastructure.storage.ClubApplicationFormRepository;
+import com.woohakdong.domain.club.model.ClubApplicationFormCreateCommand;
+import com.woohakdong.domain.club.model.ClubApplicationFormEntity;
 import com.woohakdong.domain.club.model.ClubEntity;
 import com.woohakdong.domain.club.model.ClubInfoSearchQuery;
 import com.woohakdong.domain.club.model.ClubMembershipEntity;
@@ -15,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+// TODO: ClubApplication 네이밍이 적절한 지 고민해보기
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -22,6 +26,7 @@ public class ClubApplicationService {
 
     private final ClubDomainService clubDomainService;
     private final ClubInformationPolicy clubInformationPolicy;
+    private final ClubApplicationFormRepository clubApplicationFormRepository;
 
     @Transactional
     public Long registerNewClub(ClubRegisterCommand command, UserProfileEntity userProfile) {
@@ -50,5 +55,17 @@ public class ClubApplicationService {
 
     public List<ClubEntity> searchClubs(ClubInfoSearchQuery query) {
         return clubDomainService.searchClubs(query);
+    }
+
+    @Transactional
+    public Long createClubApplicationForm(Long clubId, UserProfileEntity userProfile,
+                                          ClubApplicationFormCreateCommand command) {
+        ClubEntity club = clubDomainService.getById(clubId);
+        ClubMembershipEntity clubMembership = clubDomainService.getClubMembership(userProfile);
+        club.verifyOwner(clubMembership);
+
+        ClubApplicationFormEntity clubApplicationForm = ClubApplicationFormEntity.create(command, club);
+        ClubApplicationFormEntity savedForm = clubApplicationFormRepository.save(clubApplicationForm);
+        return savedForm.getId();
     }
 }
