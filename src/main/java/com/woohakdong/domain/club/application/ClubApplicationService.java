@@ -77,4 +77,9 @@ public class ClubApplicationService {
         return clubApplicationFormRepository.findTopByClubOrderByCreatedAtDesc(club)
                 .orElseThrow(() -> new CustomException(NOT_FOUND_CLUB_APPLICATION_FORM));
     }
+
+    public List<ClubApplicationFormEntity> getAllClubApplicationForms(Long clubId) {
+        ClubEntity club = clubDomainService.getById(clubId);
+        return clubApplicationFormRepository.findAllByClubOrderByCreatedAtDesc(club);
+    }
 }

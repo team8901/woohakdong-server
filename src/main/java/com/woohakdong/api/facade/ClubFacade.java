@@ -77,4 +77,11 @@ public class ClubFacade {
         ClubApplicationFormEntity clubApplicationForm = clubApplicationService.getLatestClubApplicationForm(clubId);
         return ClubApplicationFormInfoResponse.of(clubApplicationForm);
     }
+
+    public ListWrapper<ClubApplicationFormInfoResponse> getAllClubApplicationForms(Long clubId) {
+        List<ClubApplicationFormEntity> clubApplicationFormEntities = clubApplicationService.getAllClubApplicationForms(clubId);
+        return ListWrapper.of(clubApplicationFormEntities.stream()
+                .map(ClubApplicationFormInfoResponse::of)
+                .toList());
+    }
 }

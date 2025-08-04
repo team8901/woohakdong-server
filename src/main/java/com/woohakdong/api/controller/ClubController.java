@@ -92,5 +92,10 @@ public class ClubController {
         return clubFacade.getLatestClubApplicationForm(clubId);
     }
 
+    @Operation(summary = "동아리 모든 신청폼 조회", description = "동아리 모든 신청폼을 조회합니다.")
+    @GetMapping("/{clubId}/application-forms")
+    public ListWrapper<ClubApplicationFormInfoResponse> getAllClubApplicationForms(@PathVariable Long clubId) {
+        return clubFacade.getAllClubApplicationForms(clubId);
+    }
 
 }
