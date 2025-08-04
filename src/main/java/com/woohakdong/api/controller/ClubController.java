@@ -5,6 +5,7 @@ import com.woohakdong.api.dto.request.ClubNameValidateRequest;
 import com.woohakdong.api.dto.request.ClubRegisterRequest;
 import com.woohakdong.api.dto.request.ClubUpdateRequest;
 import com.woohakdong.api.dto.response.ClubApplicationFormIdResponse;
+import com.woohakdong.api.dto.response.ClubApplicationFormInfoResponse;
 import com.woohakdong.api.dto.response.ClubIdResponse;
 import com.woohakdong.api.dto.response.ClubInfoResponse;
 import com.woohakdong.api.dto.response.ListWrapper;
@@ -84,5 +85,12 @@ public class ClubController {
         Long userAuthId = user.getUserAuthId();
         return clubFacade.createClubApplicationForm(clubId, userAuthId, request);
     }
+
+    @Operation(summary = "가장 최신의 동아리 신청폼 조회", description = "동아리 신청폼 중 가장 최신의 것을 조회합니다.")
+    @GetMapping("/{clubId}/application-form/latest")
+    public ClubApplicationFormInfoResponse getClubApplicationForm(@PathVariable Long clubId) {
+        return clubFacade.getLatestClubApplicationForm(clubId);
+    }
+
 
 }

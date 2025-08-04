@@ -12,11 +12,14 @@ import com.woohakdong.domain.club.model.ClubNameValidateQuery;
 import com.woohakdong.domain.club.model.ClubRegisterCommand;
 import com.woohakdong.domain.club.model.ClubUpdateCommand;
 import com.woohakdong.domain.user.model.UserProfileEntity;
+import com.woohakdong.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static com.woohakdong.exception.CustomErrorInfo.NOT_FOUND_CLUB_APPLICATION_FORM;
 
 // TODO: ClubApplication 네이밍이 적절한 지 고민해보기
 @Service
@@ -67,5 +70,11 @@ public class ClubApplicationService {
         ClubApplicationFormEntity clubApplicationForm = ClubApplicationFormEntity.create(command, club);
         ClubApplicationFormEntity savedForm = clubApplicationFormRepository.save(clubApplicationForm);
         return savedForm.getId();
+    }
+
+    public ClubApplicationFormEntity getLatestClubApplicationForm(Long clubId) {
+        ClubEntity club = clubDomainService.getById(clubId);
+        return clubApplicationFormRepository.findTopByClubOrderByCreatedAtDesc(club)
+                .orElseThrow(() -> new CustomException(NOT_FOUND_CLUB_APPLICATION_FORM));
     }
 }

@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -40,12 +41,16 @@ public class ClubApplicationFormEntity {
     @Column(name = "form_content", columnDefinition = "TEXT")
     private List<FormQuestion> formContent;
 
+    @Column(name = "created_at", updatable = false)
+    private LocalDate createdAt;
+
     public static ClubApplicationFormEntity create(ClubApplicationFormCreateCommand command, ClubEntity club) {
         return new ClubApplicationFormEntity(
                 null,
                 club,
                 command.name(),
-                command.formContent()
+                command.formContent(),
+                LocalDate.now()
         );
     }
 }
