@@ -78,7 +78,7 @@ public class ClubController {
                     "type은 TEXT, RADIO, CHECKBOX, SELECT 중 하나를 선택할 수 있습니다. <p>" +
                     "required는 필수 입력 여부를 나타내며, true일 경우 해당 질문은 필수로 입력해야 합니다. <p>" +
                     "options는 type이 RADIO, CHECKBOX, SELECT일 때 선택지로 사용됩니다. [JAVA, PYTHON]와 같이 입력 가능")
-    @PostMapping("/{clubId}/application-form")
+    @PostMapping("/{clubId}/application-forms")
     public ClubApplicationFormIdResponse createClubApplicationForm(@AuthenticationPrincipal RequestUser user,
                                                                    @PathVariable Long clubId,
                                                                    @Valid @RequestBody ClubApplicationFormCreateRequest request) {
@@ -87,7 +87,7 @@ public class ClubController {
     }
 
     @Operation(summary = "가장 최신의 동아리 신청폼 조회", description = "동아리 신청폼 중 가장 최신의 것을 조회합니다.")
-    @GetMapping("/{clubId}/application-form/latest")
+    @GetMapping("/{clubId}/application-forms/latest")
     public ClubApplicationFormInfoResponse getClubApplicationForm(@PathVariable Long clubId) {
         return clubFacade.getLatestClubApplicationForm(clubId);
     }
