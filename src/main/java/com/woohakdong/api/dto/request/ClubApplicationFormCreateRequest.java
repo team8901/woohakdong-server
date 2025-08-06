@@ -12,8 +12,8 @@ public record ClubApplicationFormCreateRequest (
         @NotBlank(message = "동아리 신청서 제목은 필수입니다.")
         String name,
 
-        @Schema(example = "[{\"question\": \"이름은 무엇인가요?\", \"type\": \"TEXT\", \"required\": true}," +
-                " {\"question\": \"취미는 무엇인가요?\", \"type\": \"SELECT\", \"options\": [\"독서\", \"운동\", \"여행\"]," +
+        @Schema(example = "[{ \"order\": 1, \"question\": \"이름은 무엇인가요?\", \"type\": \"TEXT\", \"required\": true}," +
+                " {\"order\": 2, \"question\": \"취미는 무엇인가요?\", \"type\": \"SELECT\", \"options\": [\"독서\", \"운동\", \"여행\"]," +
                 " \"required\": false}]", description = "동아리 신청서 내용")
         List<FormQuestion> formContent
 ){
