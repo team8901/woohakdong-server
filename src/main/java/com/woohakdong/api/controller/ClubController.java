@@ -1,13 +1,14 @@
 package com.woohakdong.api.controller;
 
-import com.woohakdong.api.dto.request.ClubApplicationSubmissionRequest;
 import com.woohakdong.api.dto.request.ClubApplicationFormCreateRequest;
+import com.woohakdong.api.dto.request.ClubApplicationSubmissionRequest;
 import com.woohakdong.api.dto.request.ClubNameValidateRequest;
 import com.woohakdong.api.dto.request.ClubRegisterRequest;
 import com.woohakdong.api.dto.request.ClubUpdateRequest;
 import com.woohakdong.api.dto.response.ClubApplicationFormIdResponse;
 import com.woohakdong.api.dto.response.ClubApplicationFormInfoResponse;
 import com.woohakdong.api.dto.response.ClubApplicationSubmissionIdResponse;
+import com.woohakdong.api.dto.response.ClubApplicationSubmissionResponse;
 import com.woohakdong.api.dto.response.ClubIdResponse;
 import com.woohakdong.api.dto.response.ClubInfoResponse;
 import com.woohakdong.api.dto.response.ListWrapper;
@@ -108,6 +109,15 @@ public class ClubController {
                                                                          @Valid @RequestBody ClubApplicationSubmissionRequest request) {
         Long userAuthId = user.getUserAuthId();
         return clubFacade.submitClubApplicationForm(clubId, applicationFormId, userAuthId, request);
+    }
+
+    @Operation(summary = "내가 제출한 동아리 신청폼 확인", description = "내가 제출한 동아리 신청폼을 확인합니다. 신규 신청 시, 존재하지 않을 수 있습니다.")
+    @GetMapping("/{clubId}/application-forms/{applicationFormId}/submissions/me")
+    public ClubApplicationSubmissionResponse getMyClubApplicationSubmission(@AuthenticationPrincipal RequestUser user,
+                                                                            @PathVariable Long clubId,
+                                                                            @PathVariable Long applicationFormId) {
+        Long userAuthId = user.getUserAuthId();
+        return clubFacade.getMyClubApplicationSubmission(clubId, applicationFormId, userAuthId);
     }
 
 }

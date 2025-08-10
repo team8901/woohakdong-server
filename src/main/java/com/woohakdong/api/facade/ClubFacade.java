@@ -8,6 +8,7 @@ import com.woohakdong.api.dto.request.ClubUpdateRequest;
 import com.woohakdong.api.dto.response.ClubApplicationFormIdResponse;
 import com.woohakdong.api.dto.response.ClubApplicationFormInfoResponse;
 import com.woohakdong.api.dto.response.ClubApplicationSubmissionIdResponse;
+import com.woohakdong.api.dto.response.ClubApplicationSubmissionResponse;
 import com.woohakdong.api.dto.response.ClubIdResponse;
 import com.woohakdong.api.dto.response.ClubInfoResponse;
 import com.woohakdong.api.dto.response.ListWrapper;
@@ -15,6 +16,7 @@ import com.woohakdong.domain.club.application.ClubService;
 import com.woohakdong.domain.club.model.ClubApplicationFormCreateCommand;
 import com.woohakdong.domain.club.model.ClubApplicationFormEntity;
 import com.woohakdong.domain.club.model.ClubApplicationSubmissionCommand;
+import com.woohakdong.domain.club.model.ClubApplicationSubmissionEntity;
 import com.woohakdong.domain.club.model.ClubEntity;
 import com.woohakdong.domain.club.model.ClubInfoSearchQuery;
 import com.woohakdong.domain.club.model.ClubNameValidateQuery;
@@ -94,5 +96,11 @@ public class ClubFacade {
         UserProfileEntity userProfile = userService.getProfileWithAuthId(userAuthId);
         Long submissionId = clubService.submitClubApplicationForm(clubId, applicationFormId, userProfile, command);
         return ClubApplicationSubmissionIdResponse.of(submissionId);
+    }
+
+    public ClubApplicationSubmissionResponse getMyClubApplicationSubmission(Long clubId, Long applicationFormId, Long userAuthId) {
+        UserProfileEntity userProfile = userService.getProfileWithAuthId(userAuthId);
+        ClubApplicationSubmissionEntity clubApplicationSubmission = clubService.getMyClubApplicationSubmission(clubId, applicationFormId, userProfile);
+        return ClubApplicationSubmissionResponse.of(clubApplicationSubmission);
     }
 }

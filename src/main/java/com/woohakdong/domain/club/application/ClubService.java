@@ -103,4 +103,14 @@ public class ClubService {
         clubApplicationFormRepository.save(clubApplicationForm);
         return savedSubmission.getId();
     }
+
+    public ClubApplicationSubmissionEntity getMyClubApplicationSubmission(Long clubId, Long applicationFormId, UserProfileEntity userProfile) {
+        ClubApplicationFormEntity clubApplicationForm = clubApplicationFormRepository.findById(applicationFormId).orElseThrow(
+                () -> new CustomException(NOT_FOUND_CLUB_APPLICATION_FORM)
+        );
+
+        return clubApplicationSubmissionRepository.findByClubApplicationFormAndUserProfile(clubApplicationForm, userProfile).orElseThrow(
+                () -> new CustomException(NOT_FOUND_CLUB_APPLICATION_FORM)
+        );
+    }
 }
