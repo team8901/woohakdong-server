@@ -3,8 +3,11 @@ package com.woohakdong.domain.club.application;
 import com.woohakdong.domain.club.domain.ClubDomainService;
 import com.woohakdong.domain.club.domain.ClubInformationPolicy;
 import com.woohakdong.domain.club.infrastructure.storage.ClubApplicationFormRepository;
+import com.woohakdong.domain.club.infrastructure.storage.ClubApplicationSubmissionRepository;
 import com.woohakdong.domain.club.model.ClubApplicationFormCreateCommand;
 import com.woohakdong.domain.club.model.ClubApplicationFormEntity;
+import com.woohakdong.domain.club.model.ClubApplicationSubmissionCommand;
+import com.woohakdong.domain.club.model.ClubApplicationSubmissionEntity;
 import com.woohakdong.domain.club.model.ClubEntity;
 import com.woohakdong.domain.club.model.ClubInfoSearchQuery;
 import com.woohakdong.domain.club.model.ClubMembershipEntity;
@@ -30,6 +33,7 @@ public class ClubApplicationService {
     private final ClubDomainService clubDomainService;
     private final ClubInformationPolicy clubInformationPolicy;
     private final ClubApplicationFormRepository clubApplicationFormRepository;
+    private final ClubApplicationSubmissionRepository clubApplicationSubmissionRepository;
 
     @Transactional
     public Long registerNewClub(ClubRegisterCommand command, UserProfileEntity userProfile) {
@@ -81,5 +85,23 @@ public class ClubApplicationService {
     public List<ClubApplicationFormEntity> getAllClubApplicationForms(Long clubId) {
         ClubEntity club = clubDomainService.getById(clubId);
         return clubApplicationFormRepository.findAllByClubOrderByCreatedAtDesc(club);
+    }
+
+    @Transactional
+    public Long submitClubApplicationForm(Long clubId, Long applicationFormId, UserProfileEntity userProfile, ClubApplicationSubmissionCommand command) {
+        ClubApplicationFormEntity clubApplicationForm = clubApplicationFormRepository.findById(applicationFormId).orElseThrow(
+                () -> new CustomException(NOT_FOUND_CLUB_APPLICATION_FORM)
+        );
+
+        ClubApplicationSubmissionEntity clubApplicationSubmission = ClubApplicationSubmissionEntity.create(
+                command,
+                clubApplicationForm,
+                userProfile
+        );
+        ClubApplicationSubmissionEntity savedSubmission = clubApplicationSubmissionRepository.save(clubApplicationSubmission);
+
+        clubApplicationForm.addSubmission();
+        clubApplicationFormRepository.save(clubApplicationForm);
+        return savedSubmission.getId();
     }
 }

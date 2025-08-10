@@ -44,13 +44,21 @@ public class ClubApplicationFormEntity {
     @Column(name = "created_at", updatable = false)
     private LocalDate createdAt;
 
+    @Column(name = "application_count")
+    private Integer applicationCount;
+
     public static ClubApplicationFormEntity create(ClubApplicationFormCreateCommand command, ClubEntity club) {
         return new ClubApplicationFormEntity(
                 null,
                 club,
                 command.name(),
                 command.formContent(),
-                LocalDate.now()
+                LocalDate.now(),
+                0
         );
+    }
+
+    public void addSubmission() {
+        applicationCount++;
     }
 }

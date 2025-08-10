@@ -1,17 +1,20 @@
 package com.woohakdong.api.facade;
 
 import com.woohakdong.api.dto.request.ClubApplicationFormCreateRequest;
+import com.woohakdong.api.dto.request.ClubApplicationSubmissionRequest;
 import com.woohakdong.api.dto.request.ClubNameValidateRequest;
 import com.woohakdong.api.dto.request.ClubRegisterRequest;
 import com.woohakdong.api.dto.request.ClubUpdateRequest;
 import com.woohakdong.api.dto.response.ClubApplicationFormIdResponse;
 import com.woohakdong.api.dto.response.ClubApplicationFormInfoResponse;
+import com.woohakdong.api.dto.response.ClubApplicationSubmissionIdResponse;
 import com.woohakdong.api.dto.response.ClubIdResponse;
 import com.woohakdong.api.dto.response.ClubInfoResponse;
 import com.woohakdong.api.dto.response.ListWrapper;
 import com.woohakdong.domain.club.application.ClubApplicationService;
 import com.woohakdong.domain.club.model.ClubApplicationFormCreateCommand;
 import com.woohakdong.domain.club.model.ClubApplicationFormEntity;
+import com.woohakdong.domain.club.model.ClubApplicationSubmissionCommand;
 import com.woohakdong.domain.club.model.ClubEntity;
 import com.woohakdong.domain.club.model.ClubInfoSearchQuery;
 import com.woohakdong.domain.club.model.ClubNameValidateQuery;
@@ -83,5 +86,13 @@ public class ClubFacade {
         return ListWrapper.of(clubApplicationFormEntities.stream()
                 .map(ClubApplicationFormInfoResponse::of)
                 .toList());
+    }
+
+    public ClubApplicationSubmissionIdResponse submitClubApplicationForm(Long clubId, Long applicationFormId,
+                                                                         Long userAuthId, ClubApplicationSubmissionRequest request) {
+        ClubApplicationSubmissionCommand command = request.toCommandModel();
+        UserProfileEntity userProfile = userApplicationService.getProfileWithAuthId(userAuthId);
+        Long submissionId = clubApplicationService.submitClubApplicationForm(clubId, applicationFormId, userProfile, command);
+        return ClubApplicationSubmissionIdResponse.of(submissionId);
     }
 }

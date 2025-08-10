@@ -1,11 +1,13 @@
 package com.woohakdong.api.controller;
 
+import com.woohakdong.api.dto.request.ClubApplicationSubmissionRequest;
 import com.woohakdong.api.dto.request.ClubApplicationFormCreateRequest;
 import com.woohakdong.api.dto.request.ClubNameValidateRequest;
 import com.woohakdong.api.dto.request.ClubRegisterRequest;
 import com.woohakdong.api.dto.request.ClubUpdateRequest;
 import com.woohakdong.api.dto.response.ClubApplicationFormIdResponse;
 import com.woohakdong.api.dto.response.ClubApplicationFormInfoResponse;
+import com.woohakdong.api.dto.response.ClubApplicationSubmissionIdResponse;
 import com.woohakdong.api.dto.response.ClubIdResponse;
 import com.woohakdong.api.dto.response.ClubInfoResponse;
 import com.woohakdong.api.dto.response.ListWrapper;
@@ -96,6 +98,16 @@ public class ClubController {
     @GetMapping("/{clubId}/application-forms")
     public ListWrapper<ClubApplicationFormInfoResponse> getAllClubApplicationForms(@PathVariable Long clubId) {
         return clubFacade.getAllClubApplicationForms(clubId);
+    }
+
+    @Operation(summary = "동아리 신청폼 작성을 통한 동아리 가입 신청", description = "동아리 신청폼을 작성하여 동아리에 가입 신청합니다.")
+    @PostMapping("/{clubId}/application-forms/{applicationFormId}/submissions")
+    public ClubApplicationSubmissionIdResponse submitClubApplicationForm(@AuthenticationPrincipal RequestUser user,
+                                                                         @PathVariable Long clubId,
+                                                                         @PathVariable Long applicationFormId,
+                                                                         @Valid @RequestBody ClubApplicationSubmissionRequest request) {
+        Long userAuthId = user.getUserAuthId();
+        return clubFacade.submitClubApplicationForm(clubId, applicationFormId, userAuthId, request);
     }
 
 }
