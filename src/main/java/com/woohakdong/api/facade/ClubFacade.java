@@ -11,7 +11,7 @@ import com.woohakdong.api.dto.response.ClubApplicationSubmissionIdResponse;
 import com.woohakdong.api.dto.response.ClubIdResponse;
 import com.woohakdong.api.dto.response.ClubInfoResponse;
 import com.woohakdong.api.dto.response.ListWrapper;
-import com.woohakdong.domain.club.application.ClubApplicationService;
+import com.woohakdong.domain.club.application.ClubService;
 import com.woohakdong.domain.club.model.ClubApplicationFormCreateCommand;
 import com.woohakdong.domain.club.model.ClubApplicationFormEntity;
 import com.woohakdong.domain.club.model.ClubApplicationSubmissionCommand;
@@ -20,7 +20,7 @@ import com.woohakdong.domain.club.model.ClubInfoSearchQuery;
 import com.woohakdong.domain.club.model.ClubNameValidateQuery;
 import com.woohakdong.domain.club.model.ClubRegisterCommand;
 import com.woohakdong.domain.club.model.ClubUpdateCommand;
-import com.woohakdong.domain.user.application.UserApplicationService;
+import com.woohakdong.domain.user.application.UserService;
 import com.woohakdong.domain.user.model.UserProfileEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -31,18 +31,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ClubFacade {
 
-    private final UserApplicationService userApplicationService;
-    private final ClubApplicationService clubApplicationService;
+    private final UserService userService;
+    private final ClubService clubService;
 
     public ClubIdResponse registerNewClub(Long userAuthId, ClubRegisterRequest request) {
-        UserProfileEntity userProfile = userApplicationService.getProfileWithAuthId(userAuthId);
+        UserProfileEntity userProfile = userService.getProfileWithAuthId(userAuthId);
         ClubRegisterCommand command = request.toCommand();
-        return ClubIdResponse.of(clubApplicationService.registerNewClub(command, userProfile));
+        return ClubIdResponse.of(clubService.registerNewClub(command, userProfile));
     }
 
     public ListWrapper<ClubInfoResponse> getJoinedClubs(Long userAuthId) {
-        UserProfileEntity userProfile = userApplicationService.getProfileWithAuthId(userAuthId);
-        List<ClubEntity> clubs = clubApplicationService.getJoinedClubs(userProfile);
+        UserProfileEntity userProfile = userService.getProfileWithAuthId(userAuthId);
+        List<ClubEntity> clubs = clubService.getJoinedClubs(userProfile);
 
         return ListWrapper.of(clubs.stream()
                 .map(ClubInfoResponse::of)
@@ -51,18 +51,18 @@ public class ClubFacade {
 
     public void validateClubName(ClubNameValidateRequest request) {
         ClubNameValidateQuery query = request.toQueryModel();
-        clubApplicationService.validateClubName(query);
+        clubService.validateClubName(query);
     }
 
     public void updateClubInfo(Long userAuthId, Long clubId, ClubUpdateRequest request) {
-        UserProfileEntity userProfile = userApplicationService.getProfileWithAuthId(userAuthId);
+        UserProfileEntity userProfile = userService.getProfileWithAuthId(userAuthId);
         ClubUpdateCommand command = request.toCommand();
-        clubApplicationService.updateClubInfo(userProfile, command, clubId);
+        clubService.updateClubInfo(userProfile, command, clubId);
     }
 
     public ListWrapper<ClubInfoResponse> searchClubs(String name, String nameEn) {
         ClubInfoSearchQuery query = ClubInfoSearchQuery.of(name, nameEn);
-        List<ClubEntity> clubs = clubApplicationService.searchClubs(query);
+        List<ClubEntity> clubs = clubService.searchClubs(query);
         return ListWrapper.of(clubs.stream()
                 .map(ClubInfoResponse::of)
                 .toList());
@@ -71,18 +71,18 @@ public class ClubFacade {
     public ClubApplicationFormIdResponse createClubApplicationForm(Long clubId, Long userAuthId,
                                                                    ClubApplicationFormCreateRequest request) {
         ClubApplicationFormCreateCommand command = request.toCommandModel();
-        UserProfileEntity userProfile = userApplicationService.getProfileWithAuthId(userAuthId);
-        Long clubApplicationFormId = clubApplicationService.createClubApplicationForm(clubId, userProfile, command);
+        UserProfileEntity userProfile = userService.getProfileWithAuthId(userAuthId);
+        Long clubApplicationFormId = clubService.createClubApplicationForm(clubId, userProfile, command);
         return ClubApplicationFormIdResponse.of(clubApplicationFormId);
     }
 
     public ClubApplicationFormInfoResponse getLatestClubApplicationForm(Long clubId) {
-        ClubApplicationFormEntity clubApplicationForm = clubApplicationService.getLatestClubApplicationForm(clubId);
+        ClubApplicationFormEntity clubApplicationForm = clubService.getLatestClubApplicationForm(clubId);
         return ClubApplicationFormInfoResponse.of(clubApplicationForm);
     }
 
     public ListWrapper<ClubApplicationFormInfoResponse> getAllClubApplicationForms(Long clubId) {
-        List<ClubApplicationFormEntity> clubApplicationFormEntities = clubApplicationService.getAllClubApplicationForms(clubId);
+        List<ClubApplicationFormEntity> clubApplicationFormEntities = clubService.getAllClubApplicationForms(clubId);
         return ListWrapper.of(clubApplicationFormEntities.stream()
                 .map(ClubApplicationFormInfoResponse::of)
                 .toList());
@@ -91,8 +91,8 @@ public class ClubFacade {
     public ClubApplicationSubmissionIdResponse submitClubApplicationForm(Long clubId, Long applicationFormId,
                                                                          Long userAuthId, ClubApplicationSubmissionRequest request) {
         ClubApplicationSubmissionCommand command = request.toCommandModel();
-        UserProfileEntity userProfile = userApplicationService.getProfileWithAuthId(userAuthId);
-        Long submissionId = clubApplicationService.submitClubApplicationForm(clubId, applicationFormId, userProfile, command);
+        UserProfileEntity userProfile = userService.getProfileWithAuthId(userAuthId);
+        Long submissionId = clubService.submitClubApplicationForm(clubId, applicationFormId, userProfile, command);
         return ClubApplicationSubmissionIdResponse.of(submissionId);
     }
 }

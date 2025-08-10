@@ -24,11 +24,10 @@ import java.util.List;
 
 import static com.woohakdong.exception.CustomErrorInfo.NOT_FOUND_CLUB_APPLICATION_FORM;
 
-// TODO: ClubApplication 네이밍이 적절한 지 고민해보기
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ClubApplicationService {
+public class ClubService {
 
     private final ClubDomainService clubDomainService;
     private final ClubInformationPolicy clubInformationPolicy;
