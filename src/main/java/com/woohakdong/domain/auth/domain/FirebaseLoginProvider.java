@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class FirebaseLoginProvider implements SocialLoginProvider {
+public class FirebaseLoginProvider implements ExternalLoginProvider {
     
     private static final Set<String> SUPPORTED_PROVIDERS = Set.of(
             "google", "facebook", "twitter", "github", 

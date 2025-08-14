@@ -1,6 +1,6 @@
 package com.woohakdong.domain.auth.domain;
 
-import com.woohakdong.domain.auth.model.SocialLoginTokens;
+import com.woohakdong.domain.auth.model.LoginTokens;
 import com.woohakdong.domain.auth.model.UserAuthEntity;
 import com.woohakdong.domain.auth.model.UserAuthRole;
 import com.woohakdong.utils.JwtUtil;
@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class JwtTokenService {
+public class JwtTokenDomainService {
 
     private final JwtUtil jwtUtil;
 
-    public SocialLoginTokens publishSocialLoginToken(UserAuthEntity userAuth) {
+    public LoginTokens publishLoginTokens(UserAuthEntity userAuth) {
         Long userAuthId = userAuth.getId();
         UserAuthRole userAuthRole = userAuth.getRole();
 
@@ -22,6 +22,6 @@ public class JwtTokenService {
 
         // TODO : Refresh 저장
 
-        return new SocialLoginTokens(accessToken, refreshToken);
+        return new LoginTokens(accessToken, refreshToken);
     }
 }

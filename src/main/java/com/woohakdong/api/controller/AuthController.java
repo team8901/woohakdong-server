@@ -2,7 +2,7 @@ package com.woohakdong.api.controller;
 
 import com.woohakdong.api.dto.request.AuthSocialLoginRequest;
 import com.woohakdong.api.facade.AuthFacade;
-import com.woohakdong.api.dto.response.AuthSocialLoginResponse;
+import com.woohakdong.api.dto.response.LoginTokensResponse;
 import com.woohakdong.framework.security.RequestUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,7 +25,7 @@ public class AuthController {
 
     @Operation(summary = "소셜 로그인", description = "소셜 로그인을 통해, JWT 토큰을 발급받습니다.")
     @PostMapping("/social-login")
-    public AuthSocialLoginResponse socialLogin(@RequestBody @Valid AuthSocialLoginRequest request) {
+    public LoginTokensResponse socialLogin(@RequestBody @Valid AuthSocialLoginRequest request) {
         return authFacade.socialLogin(request);
     }
 
