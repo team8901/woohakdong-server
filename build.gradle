@@ -62,6 +62,9 @@ dependencies {
 
     // nano-id
     implementation 'com.aventrix.jnanoid:jnanoid:2.0.0'
+
+    // Firebase
+    implementation 'com.google.firebase:firebase-admin:9.4.2'
 }
 
 tasks.named('test') {

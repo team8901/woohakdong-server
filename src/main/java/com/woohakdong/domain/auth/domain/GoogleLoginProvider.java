@@ -4,10 +4,13 @@ import com.woohakdong.domain.auth.infrastructure.client.GoogleOAuthClient;
 import com.woohakdong.domain.auth.model.SocialUserInfo;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Profile("!firebase") // This provider is disabled when using Firebase authentication
+@Deprecated // Use FirebaseLoginProvider instead
 public class GoogleLoginProvider implements SocialLoginProvider {
     private static final String GOOGLE = "google";
     private static final String FIELD_EMAIL = "email";
