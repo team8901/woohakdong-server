@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 public enum CustomErrorInfo {
     // 400 Bad Request
     BAD_REQUEST_INVALID_PARAMETER(400, "잘못된 요청입니다.", "400001"),
+    BAD_REQUEST_FIREBASE_TOKEN(400, "잘못된 firebase 토큰입니다.", "400002"),
 
     // 401 Unauthorized
     UNAUTHORIZED_INVALID_TOKEN(401, "유효하지 않은 토큰입니다.", "401001"),
