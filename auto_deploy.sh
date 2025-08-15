@@ -51,8 +51,8 @@ while true; do
     docker run -d \
       -p 80:"$PORT" \
       --name "$CONTAINER_NAME" \
-      -v /home/ubuntu/firebase-service-account.json:/firebase-service-account.json \
-      -e FIREBASE_CONFIG_PATH=/firebase-service-account.json \
+      -v /home/ubuntu/firebase-service-account.json:/app/firebase-service-account.json \
+      -e GOOGLE_APPLICATION_CREDENTIALS=/app/firebase-service-account.json \
       "$IMAGE_NAME"
 
     MESSAGE="🚀 배포 완료! 최신 코드로 서비스 중.\n> ${LAST_COMMIT_TITLE}"
