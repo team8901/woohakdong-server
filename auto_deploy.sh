@@ -48,7 +48,12 @@ while true; do
     docker rm "$CONTAINER_NAME"
 
     echo "[INFO] Starting new container..."
-    docker run -d -p 80:"$PORT" --name "$CONTAINER_NAME" "$IMAGE_NAME"
+    docker run -d \
+      -p 80:"$PORT" \
+      --name "$CONTAINER_NAME" \
+      -v /home/ubuntu/firebase-service-account.json:/firebase-service-account.json \
+      -e FIREBASE_CONFIG_PATH=/firebase-service-account.json \
+      "$IMAGE_NAME"
 
     MESSAGE="🚀 배포 완료! 최신 코드로 서비스 중.\n> ${LAST_COMMIT_TITLE}"
     send_slack_message "$MESSAGE"
