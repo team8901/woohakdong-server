@@ -22,7 +22,3 @@ spring:
 
 jwt:
   secret: ${JWT_SECRET:woohakdongwoohakdongwoohakdong1234}
-
-firebase:
-  config:
-    path: ${FIREBASE_CONFIG_PATH:/firebase-service-account.json}
