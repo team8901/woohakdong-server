@@ -1,0 +1,57 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: woohakdong-mysql
+    environment:
+      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-woohakdong123}"
+      - "MYSQL_DATABASE=${MYSQL_DATABASE:-woohakdong}"
+      - "MYSQL_USER=${MYSQL_USER:-woohakdong}"
+      - "MYSQL_PASSWORD=${MYSQL_PASSWORD:-woohakdong123}"
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - woohakdong-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: woohakdong-dev:latest
+    container_name: woohakdong
+    ports:
+      - "${PORT:-8080}:8080"
+    environment:
+      - "SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-dev}"
+      - "SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL:-jdbc:mysql://mysql:3306/woohakdong?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul}"
+      - "SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME:-woohakdong}"
+      - "SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD:-woohakdong123}"
+      - JWT_SECRET=${JWT_SECRET:-woohakdongwoohakdongwoohakdong1234}
+      - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - "AWS_REGION=${AWS_REGION:-ap-northeast-2}"
+      - "FIREBASE_CONFIG_PATH=${FIREBASE_CONFIG_PATH:-/firebase-service-account.json}"
+      - "GOOGLE_APPLICATION_CREDENTIALS=/firebase-service-account.json"
+    volumes:
+      - firebase-service-account.json:/firebase-service-account.json:ro
+    networks:
+      - woohakdong-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  mysql-data:
+    driver: local
+
+networks:
+  woohakdong-network:
+    driver: bridge
