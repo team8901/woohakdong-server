@@ -103,4 +103,12 @@ public class ClubFacade {
         ClubApplicationSubmissionEntity clubApplicationSubmission = clubService.getMyClubApplicationSubmission(clubId, applicationFormId, userProfile);
         return ClubApplicationSubmissionResponse.of(clubApplicationSubmission);
     }
+
+    public ListWrapper<ClubApplicationSubmissionResponse> getClubApplicationSubmissions(Long clubId, Long applicationFormId, Long userAuthId) {
+        UserProfileEntity userProfile = userService.getProfileWithAuthId(userAuthId);
+        List<ClubApplicationSubmissionEntity> submissions = clubService.getClubApplicationSubmissions(clubId, applicationFormId, userProfile);
+        return ListWrapper.of(submissions.stream()
+                .map(ClubApplicationSubmissionResponse::of)
+                .toList());
+    }
 }

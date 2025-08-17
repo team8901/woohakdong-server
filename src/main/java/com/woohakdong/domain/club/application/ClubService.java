@@ -113,4 +113,18 @@ public class ClubService {
                 () -> new CustomException(NOT_FOUND_CLUB_APPLICATION_FORM)
         );
     }
+
+    public List<ClubApplicationSubmissionEntity> getClubApplicationSubmissions(Long clubId, Long applicationFormId, UserProfileEntity userProfile) {
+        ClubEntity club = clubDomainService.getById(clubId);
+
+        // Club Owner만 신청서 열람이 가능하다.
+        ClubMembershipEntity clubMembership = clubDomainService.getClubMembership(userProfile);
+        club.verifyOwner(clubMembership);
+
+        clubApplicationFormRepository.findById(applicationFormId).orElseThrow(
+                () -> new CustomException(NOT_FOUND_CLUB_APPLICATION_FORM)
+        );
+
+        return clubApplicationSubmissionRepository.findAllByClubApplicationFormId(applicationFormId);
+    }
 }

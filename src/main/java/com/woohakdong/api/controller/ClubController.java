@@ -120,4 +120,13 @@ public class ClubController {
         return clubFacade.getMyClubApplicationSubmission(clubId, applicationFormId, userAuthId);
     }
 
+    @Operation(summary = "제출된 동아리 신청서 목록 조회", description = "특정 신청폼에 제출된 모든 신청서 목록을 조회합니다. 동아리 관리자만 조회 가능합니다.")
+    @GetMapping("/{clubId}/application-forms/{applicationFormId}/submissions")
+    public ListWrapper<ClubApplicationSubmissionResponse> getClubApplicationSubmissions(@AuthenticationPrincipal RequestUser user,
+                                                                                        @PathVariable Long clubId,
+                                                                                        @PathVariable Long applicationFormId) {
+        Long userAuthId = user.getUserAuthId();
+        return clubFacade.getClubApplicationSubmissions(clubId, applicationFormId, userAuthId);
+    }
+
 }
