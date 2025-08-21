@@ -63,9 +63,6 @@ dependencies {
     // nano-id
     implementation 'com.aventrix.jnanoid:jnanoid:2.0.0'
 
-    // log
-    implementation("net.logstash.logback:logstash-logback-encoder:7.4")
-
     // Firebase
     implementation 'com.google.firebase:firebase-admin:9.4.2'
 }
