@@ -8,6 +8,7 @@ public record UserProfileResponse(
         String nickname,
         String email,
         String phoneNumber,
+        String studentId,
         Gender gender
 ) {
     public static UserProfileResponse from(UserProfileEntity userProfile) {
@@ -16,6 +17,7 @@ public record UserProfileResponse(
                 userProfile.getNickname(),
                 userProfile.getEmail(),
                 userProfile.getPhoneNumber(),
+                userProfile.getStudentId(),
                 userProfile.getGender()
         );
     }
