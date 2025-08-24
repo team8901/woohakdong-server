@@ -1,5 +1,6 @@
 package com.woohakdong.domain.auth.application;
 
+import com.woohakdong.api.dto.response.AuthTokensDto;
 import com.woohakdong.domain.auth.domain.AuthDomainService;
 import com.woohakdong.domain.auth.domain.JwtTokenService;
 import com.woohakdong.domain.auth.domain.SocialLoginService;

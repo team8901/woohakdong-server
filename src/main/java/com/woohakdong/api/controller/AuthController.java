@@ -2,6 +2,7 @@ package com.woohakdong.api.controller;
 
 import com.woohakdong.api.dto.request.AuthSocialLoginRequest;
 import com.woohakdong.api.dto.response.AuthSocialLoginResponse;
+import com.woohakdong.api.dto.response.AuthTokensDto;
 import com.woohakdong.api.facade.AuthFacade;
 import com.woohakdong.exception.CustomAuthException;
 import com.woohakdong.framework.security.RequestUser;
@@ -36,10 +37,10 @@ public class AuthController {
     @PostMapping("/social-login")
     public AuthSocialLoginResponse socialLogin(@RequestBody @Valid AuthSocialLoginRequest request,
                                                HttpServletResponse response) {
-        AuthSocialLoginResponse loginResponse = authFacade.socialLogin(request);
+        AuthTokensDto authTokensDto = authFacade.socialLogin(request);
 
         // Refresh Token을 HttpOnly 쿠키로 설정
-        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", loginResponse.refreshToken())
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", authTokensDto.refreshToken())
                 .httpOnly(true)
                 .secure(true) // HTTPS에서만 전송
                 .path("/")
@@ -50,7 +51,7 @@ public class AuthController {
         response.addHeader("Set-Cookie", refreshTokenCookie.toString());
 
         // Response에서는 access token만 반환
-        return new AuthSocialLoginResponse(loginResponse.accessToken(), null);
+        return new AuthSocialLoginResponse(authTokensDto.accessToken());
     }
 
     @Operation(summary = "Access Token 재발급", description = "Refresh Token을 이용하여 새로운 Access Token을 발급받습니다.")
@@ -77,7 +78,7 @@ public class AuthController {
         String newAccessToken = authFacade.refreshAccessToken(refreshToken);
 
         // Response에서는 access token만 반환
-        return new AuthSocialLoginResponse(newAccessToken, null);
+        return new AuthSocialLoginResponse(newAccessToken);
     }
 
     @GetMapping("/test")
