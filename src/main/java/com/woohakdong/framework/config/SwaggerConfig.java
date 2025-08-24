@@ -29,7 +29,7 @@ public class SwaggerConfig {
      * "AnotherController", List.of("publicMethod1","publicMethod2")
      */
     private static final Map<String, List<String>> EXEMPT_APIS = Map.of(
-            "AuthController", List.of("socialLogin"),
+            "AuthController", List.of("socialLogin", "refreshAccessToken"),
             "ClubController", List.of("searchClubs")
     );
 

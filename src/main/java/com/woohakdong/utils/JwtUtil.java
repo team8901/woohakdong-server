@@ -42,6 +42,17 @@ public class JwtUtil {
         );
     }
 
+    /**
+     * 토큰의 타입을 반환합니다.
+     *
+     * @param token JWT 토큰
+     * @return 토큰 타입 (access 또는 refresh)
+     * @throws CustomAuthException 토큰이 유효하지 않은 경우
+     */
+    public String getTokenType(String token) {
+        Claims claims = getClaims(token);
+        return claims.get("type", String.class);
+    }
 
     /**
      * 토큰을 파싱하여 클레임(Payload)을 반환하고, 과정에서 발생하는 예외를 처리합니다.

@@ -26,6 +26,7 @@ public class SecurityConfig {
     };
     public static final String[] PUBLIC_API_PATHS = {
             "/api/auth/social-login",
+            "/api/auth/refresh",
             "/api/clubs/search"
     };
 

@@ -4,7 +4,7 @@ import com.woohakdong.domain.auth.domain.AuthDomainService;
 import com.woohakdong.domain.auth.domain.JwtTokenService;
 import com.woohakdong.domain.auth.domain.SocialLoginService;
 import com.woohakdong.domain.auth.model.AuthSocialLoginCommand;
-import com.woohakdong.domain.auth.model.SocialLoginTokens;
+import com.woohakdong.domain.auth.model.AuthTokens;
 import com.woohakdong.domain.auth.model.SocialUserInfo;
 import com.woohakdong.domain.auth.model.UserAuthEntity;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +18,9 @@ public class AuthService {
     private final AuthDomainService authDomainService;
     private final JwtTokenService jwtTokenService;
 
-    public SocialLoginTokens socialLogin(AuthSocialLoginCommand socialLoginCommand) {
+    public AuthTokens socialLogin(AuthSocialLoginCommand socialLoginCommand) {
         SocialUserInfo socialUserInfo = socialLoginService.resolveUserInfo(socialLoginCommand);
         UserAuthEntity userAuth = authDomainService.createOrFindUser(socialUserInfo);
-        return jwtTokenService.publishSocialLoginToken(userAuth);
+        return jwtTokenService.generateTokens(userAuth);
     }
 }

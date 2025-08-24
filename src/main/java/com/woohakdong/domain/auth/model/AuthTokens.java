@@ -1,6 +1,6 @@
 package com.woohakdong.domain.auth.model;
 
-public record SocialLoginTokens(
+public record AuthTokens(
         String accessToken,
         String refreshToken
 ) {
