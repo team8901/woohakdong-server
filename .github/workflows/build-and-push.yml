@@ -1,0 +1,31 @@
+name: Build and Push to OCIR
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY: yny.ocir.io
+      REPO: woohakdong
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Docker login to OCIR
+        run: |
+          echo "${{ secrets.OCIR_AUTH_TOKEN }}" | docker login ${{ env.REGISTRY }} \
+            -u "${{ secrets.OCIR_TENANT_NS }}/${{ secrets.OCIR_EMAIL }}" \
+            --password-stdin
+
+      - name: Build & Push
+        run: |
+          SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
+          IMAGE="${{ env.REGISTRY }}/${{ secrets.OCIR_TENANT_NS }}/${{ env.REPO }}:${SHORT_SHA}"
+
+          echo "Building and pushing $IMAGE"
+          docker build -t "$IMAGE" .
+          docker push "$IMAGE"
