@@ -45,7 +45,7 @@ public class AuthController {
                 .secure(true) // HTTPS에서만 전송
                 .path("/")
                 .maxAge(Duration.ofDays(7)) // 7일
-                .sameSite("Strict") // CSRF 방지
+                .sameSite("None") // 임시 처리
                 .build();
 
         response.addHeader("Set-Cookie", refreshTokenCookie.toString());
