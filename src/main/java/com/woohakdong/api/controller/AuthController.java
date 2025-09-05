@@ -42,10 +42,10 @@ public class AuthController {
         // Refresh Token을 HttpOnly 쿠키로 설정
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", authTokensDto.refreshToken())
                 .httpOnly(true)
-                .secure(true) // HTTPS에서만 전송
+                .secure(false) // 개발환경을 위해 임시로 false
                 .path("/")
                 .maxAge(Duration.ofDays(7)) // 7일
-                .sameSite("None") // 임시 처리
+                .sameSite("Lax") // 개발환경을 위해 Lax로 변경
                 .build();
 
         response.addHeader("Set-Cookie", refreshTokenCookie.toString());
