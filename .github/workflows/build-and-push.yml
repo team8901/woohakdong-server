@@ -21,11 +21,17 @@ jobs:
             -u "${{ secrets.OCIR_TENANT_NS }}/${{ secrets.OCIR_EMAIL }}" \
             --password-stdin
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Build & Push
         run: |
           SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
           IMAGE="${{ env.REGISTRY }}/${{ secrets.OCIR_TENANT_NS }}/${{ env.REPO }}:${SHORT_SHA}"
 
-          echo "Building and pushing $IMAGE"
-          docker build -t "$IMAGE" .
-          docker push "$IMAGE"
+          echo "Building and pushing $IMAGE for ARM64"
+          docker buildx build \
+            --platform linux/arm64 \
+            -t "$IMAGE" \
+            --push \
+            .
