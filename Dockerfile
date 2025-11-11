@@ -4,8 +4,8 @@ WORKDIR /app
 COPY --chown=gradle:gradle . /app
 RUN gradle bootJar --no-daemon
 
-# 2단계: 실행 단계 (작은 JDK 이미지)
-FROM openjdk:21-jdk-slim
+# 2단계: 실행 단계 (작은 JRE 이미지)
+FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=build /app/build/libs/*.jar app.jar
 EXPOSE 8080
