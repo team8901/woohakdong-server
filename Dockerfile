@@ -9,7 +9,7 @@ RUN gradle dependencies --no-daemon || true
 
 # 소스 코드 복사 및 빌드
 COPY --chown=gradle:gradle . /app
-RUN gradle bootJar --no-daemon
+RUN gradle bootJar --no-daemon -x test
 
 # 2단계: 실행 단계 (작은 JRE 이미지)
 FROM eclipse-temurin:21-jre
