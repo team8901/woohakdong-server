@@ -1,5 +1,6 @@
 package com.woohakdong.framework.config;
 
+import com.woohakdong.framework.filter.RequestLoggingFilter;
 import com.woohakdong.framework.security.CustomAccessDeniedHandler;
 import com.woohakdong.framework.security.CustomAuthenticationEntryPoint;
 import com.woohakdong.framework.security.JwtFilter;
@@ -30,6 +31,7 @@ public class SecurityConfig {
             "/api/clubs/search"
     };
 
+    private final RequestLoggingFilter requestLoggingFilter;
     private final JwtFilter jwtFilter;
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
     private final CustomAccessDeniedHandler accessDeniedHandler;
@@ -47,6 +49,7 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
         );
 
+        http.addFilterBefore(requestLoggingFilter, UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         http.exceptionHandling(ex -> ex
