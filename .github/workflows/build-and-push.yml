@@ -25,6 +25,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build & Push
+        id: build
         run: |
           SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
           IMAGE="${{ env.REGISTRY }}/${{ secrets.OCIR_TENANT_NS }}/${{ env.REPO }}:${SHORT_SHA}"
@@ -35,3 +36,34 @@ jobs:
             -t "$IMAGE" \
             --push \
             .
+
+          echo "image_tag=${SHORT_SHA}" >> $GITHUB_OUTPUT
+
+      - name: Update infra repository
+        env:
+          INFRA_REPO_TOKEN: ${{ secrets.INFRA_REPO_TOKEN }}
+          IMAGE_TAG: ${{ steps.build.outputs.image_tag }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Infra 저장소 클론
+          git clone https://x-access-token:${INFRA_REPO_TOKEN}@github.com/team8901/woohakdong-infra.git
+          cd woohakdong-infra
+
+          # deployment.yaml의 이미지 태그 업데이트
+          sed -i '' "s|image: yny.ocir.io/axaswla4b9b0/woohakdong:.*|image: yny.ocir.io/axaswla4b9b0/woohakdong:${IMAGE_TAG}|g" k8s/web/deployment.yaml
+
+          # 변경사항 확인
+          echo "Updated deployment.yaml:"
+          git diff k8s/web/deployment.yaml
+
+          # 변경사항이 있으면 커밋 및 푸시
+          if git diff --quiet k8s/web/deployment.yaml; then
+            echo "No changes to commit"
+          else
+            git add k8s/web/deployment.yaml
+            git commit -m "chore: update image tag to ${IMAGE_TAG}"
+            git push
+            echo "Successfully pushed changes to infra repository"
+          fi
