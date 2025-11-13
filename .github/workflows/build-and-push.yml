@@ -15,6 +15,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Docker login to OCIR
         run: |
           echo "${{ secrets.OCIR_AUTH_TOKEN }}" | docker login ${{ env.REGISTRY }} \
@@ -28,10 +34,11 @@ jobs:
           IMAGE="${{ env.REGISTRY }}/${{ secrets.OCIR_TENANT_NS }}/${{ env.REPO }}:${SHORT_SHA}"
 
           echo "Building $IMAGE for ARM64"
-          docker build --platform linux/arm64 -t "$IMAGE" .
-
-          echo "Pushing $IMAGE"
-          docker push "$IMAGE"
+          docker buildx build \
+            --platform linux/arm64 \
+            -t "$IMAGE" \
+            --push \
+            .
 
           echo "image_tag=${SHORT_SHA}" >> $GITHUB_OUTPUT
 
