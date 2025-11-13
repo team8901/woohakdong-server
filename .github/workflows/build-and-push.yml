@@ -69,7 +69,7 @@ jobs:
             echo "No changes to commit"
           else
             git add k8s/web/deployment.yaml
-            git commit -m "chore: update image tag to ${IMAGE_TAG}"
+            git commit -m "Update image tag to ${IMAGE_TAG}"
             git push
             echo "Successfully pushed changes to infra repository"
           fi
