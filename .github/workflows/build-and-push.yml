@@ -21,21 +21,17 @@ jobs:
             -u "${{ secrets.OCIR_TENANT_NS }}/${{ secrets.OCIR_EMAIL }}" \
             --password-stdin
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Build & Push
         id: build
         run: |
           SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
           IMAGE="${{ env.REGISTRY }}/${{ secrets.OCIR_TENANT_NS }}/${{ env.REPO }}:${SHORT_SHA}"
 
-          echo "Building and pushing $IMAGE for ARM64"
-          docker buildx build \
-            --platform linux/arm64 \
-            -t "$IMAGE" \
-            --push \
-            .
+          echo "Building $IMAGE for ARM64"
+          docker build --platform linux/arm64 -t "$IMAGE" .
+
+          echo "Pushing $IMAGE"
+          docker push "$IMAGE"
 
           echo "image_tag=${SHORT_SHA}" >> $GITHUB_OUTPUT
 
@@ -43,6 +39,9 @@ jobs:
         env:
           INFRA_REPO_TOKEN: ${{ secrets.INFRA_REPO_TOKEN }}
           IMAGE_TAG: ${{ steps.build.outputs.image_tag }}
+          REGISTRY: ${{ env.REGISTRY }}
+          TENANT_NS: ${{ secrets.OCIR_TENANT_NS }}
+          REPO: ${{ env.REPO }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -52,7 +51,7 @@ jobs:
           cd woohakdong-infra
 
           # deployment.yaml의 이미지 태그 업데이트
-          sed -i '' "s|image: yny.ocir.io/axaswla4b9b0/woohakdong:.*|image: yny.ocir.io/axaswla4b9b0/woohakdong:${IMAGE_TAG}|g" k8s/web/deployment.yaml
+          sed -i "s|image: ${REGISTRY}/${TENANT_NS}/${REPO}:.*|image: ${REGISTRY}/${TENANT_NS}/${REPO}:${IMAGE_TAG}|g" k8s/web/deployment.yaml
 
           # 변경사항 확인
           echo "Updated deployment.yaml:"
