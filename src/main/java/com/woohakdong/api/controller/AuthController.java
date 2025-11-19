@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +34,12 @@ public class AuthController {
 
     private final AuthFacade authFacade;
 
+    @Value("${cookie.secure}")
+    private boolean cookieSecure;
+
+    @Value("${cookie.same-site}")
+    private String cookieSameSite;
+
     @Operation(summary = "소셜 로그인", description = "소셜 로그인을 통해, JWT 토큰을 발급받습니다.")
     @PostMapping("/social-login")
     public AuthSocialLoginResponse socialLogin(@RequestBody @Valid AuthSocialLoginRequest request,
@@ -42,10 +49,10 @@ public class AuthController {
         // Refresh Token을 HttpOnly 쿠키로 설정
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", authTokensDto.refreshToken())
                 .httpOnly(true)
-                .secure(false) // 개발환경을 위해 임시로 false
+                .secure(cookieSecure)
                 .path("/")
                 .maxAge(Duration.ofDays(7)) // 7일
-                .sameSite("Lax") // 개발환경을 위해 Lax로 변경
+                .sameSite(cookieSameSite)
                 .build();
 
         response.addHeader("Set-Cookie", refreshTokenCookie.toString());
