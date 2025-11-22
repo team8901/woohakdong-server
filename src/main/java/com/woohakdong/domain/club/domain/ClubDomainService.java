@@ -88,4 +88,10 @@ public class ClubDomainService {
         ClubEntity club = getById(clubId);
         return clubMemberShipRepository.findAllByClub(club);
     }
+
+    public ClubMembershipEntity getClubMember(Long clubId, Long clubMembershipId) {
+        ClubEntity club = getById(clubId);
+        return clubMemberShipRepository.findByIdAndClub(clubMembershipId, club)
+                .orElseThrow(() -> new CustomException(NOT_FOUND_CLUB_MEMBERSHIP));
+    }
 }

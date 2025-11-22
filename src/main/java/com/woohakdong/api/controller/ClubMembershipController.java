@@ -24,4 +24,11 @@ public class ClubMembershipController {
     public ListWrapper<ClubMembershipResponse> getClubMembers(@PathVariable Long clubId) {
         return clubMembershipFacade.getClubMembers(clubId);
     }
+
+    @Operation(summary = "동아리 회원 단건 조회", description = "특정 동아리의 회원 정보를 조회합니다.")
+    @GetMapping("/{clubMembershipId}")
+    public ClubMembershipResponse getClubMember(@PathVariable Long clubId,
+                                                @PathVariable Long clubMembershipId) {
+        return clubMembershipFacade.getClubMember(clubId, clubMembershipId);
+    }
 }

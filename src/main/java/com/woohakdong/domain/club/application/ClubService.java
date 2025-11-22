@@ -131,4 +131,8 @@ public class ClubService {
     public List<ClubMembershipEntity> getClubMembers(Long clubId) {
         return clubDomainService.getClubMembers(clubId);
     }
+
+    public ClubMembershipEntity getClubMember(Long clubId, Long clubMembershipId) {
+        return clubDomainService.getClubMember(clubId, clubMembershipId);
+    }
 }

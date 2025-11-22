@@ -21,4 +21,9 @@ public class ClubMembershipFacade {
                 .map(ClubMembershipResponse::of)
                 .toList());
     }
+
+    public ClubMembershipResponse getClubMember(Long clubId, Long clubMembershipId) {
+        ClubMembershipEntity member = clubService.getClubMember(clubId, clubMembershipId);
+        return ClubMembershipResponse.of(member);
+    }
 }
