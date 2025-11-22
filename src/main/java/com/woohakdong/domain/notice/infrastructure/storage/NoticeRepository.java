@@ -11,8 +11,8 @@ import java.util.Optional;
 public interface NoticeRepository extends JpaRepository<NoticeEntity, Long> {
 
     @EntityGraph(attributePaths = {"writer"})
-    List<NoticeEntity> findAllByClubOrderByIsPinnedDescUpdatedAtDesc(ClubEntity club);
+    List<NoticeEntity> findAllByClubAndDeletedAtIsNullOrderByIsPinnedDescUpdatedAtDesc(ClubEntity club);
 
     @EntityGraph(attributePaths = {"writer"})
-    Optional<NoticeEntity> findByIdAndClub(Long id, ClubEntity club);
+    Optional<NoticeEntity> findByIdAndClubAndDeletedAtIsNull(Long id, ClubEntity club);
 }

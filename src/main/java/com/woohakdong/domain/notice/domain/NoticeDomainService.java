@@ -30,11 +30,11 @@ public class NoticeDomainService {
     }
 
     public List<NoticeEntity> getNotices(ClubEntity club) {
-        return noticeRepository.findAllByClubOrderByIsPinnedDescUpdatedAtDesc(club);
+        return noticeRepository.findAllByClubAndDeletedAtIsNullOrderByIsPinnedDescUpdatedAtDesc(club);
     }
 
     public NoticeEntity getNotice(Long noticeId, ClubEntity club) {
-        return noticeRepository.findByIdAndClub(noticeId, club)
+        return noticeRepository.findByIdAndClubAndDeletedAtIsNull(noticeId, club)
                 .orElseThrow(() -> new CustomException(NOT_FOUND_NOTICE));
     }
 
@@ -46,6 +46,7 @@ public class NoticeDomainService {
 
     @Transactional
     public void deleteNotice(NoticeEntity notice) {
-        noticeRepository.delete(notice);
+        notice.delete();
+        noticeRepository.save(notice);
     }
 }

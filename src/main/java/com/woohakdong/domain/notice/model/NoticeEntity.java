@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,6 +34,8 @@ public class NoticeEntity {
     @Column(nullable = false)
     private LocalDate updatedAt;
 
+    private LocalDateTime deletedAt;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "club_id", nullable = false)
     private ClubEntity club;
@@ -48,6 +51,7 @@ public class NoticeEntity {
                 command.content(),
                 command.isPinned(),
                 LocalDate.now(),
+                null,
                 club,
                 writer
         );
@@ -58,5 +62,9 @@ public class NoticeEntity {
         this.content = command.content();
         this.isPinned = command.isPinned();
         this.updatedAt = LocalDate.now();
+    }
+
+    public void delete() {
+        this.deletedAt = LocalDateTime.now();
     }
 }
