@@ -127,4 +127,8 @@ public class ClubService {
 
         return clubApplicationSubmissionRepository.findAllByClubApplicationFormId(applicationFormId);
     }
+
+    public List<ClubMembershipEntity> getClubMembers(Long clubId) {
+        return clubDomainService.getClubMembers(clubId);
+    }
 }

@@ -83,4 +83,9 @@ public class ClubDomainService {
         // TODO : querydsl로 변경
         return clubRepository.findByNameOrNameEn(query.name(), query.nameEn());
     }
+
+    public List<ClubMembershipEntity> getClubMembers(Long clubId) {
+        ClubEntity club = getById(clubId);
+        return clubMemberShipRepository.findAllByClub(club);
+    }
 }
