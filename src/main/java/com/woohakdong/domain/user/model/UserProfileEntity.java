@@ -44,6 +44,9 @@ public class UserProfileEntity {
     @Column(name = "student_id")
     private String studentId;
 
+    @Column(name = "major")
+    private String major;
+
     @Column(name = "gender")
     @Enumerated(value = EnumType.STRING)
     private Gender gender;
@@ -60,6 +63,7 @@ public class UserProfileEntity {
                 userAuth.getEmail(),
                 command.phoneNumber(),
                 command.studentId(),
+                command.major(),
                 command.gender(),
                 userAuth
         );

@@ -9,6 +9,7 @@ public record UserProfileResponse(
         String email,
         String phoneNumber,
         String studentId,
+        String major,
         Gender gender
 ) {
     public static UserProfileResponse from(UserProfileEntity userProfile) {
@@ -18,6 +19,7 @@ public record UserProfileResponse(
                 userProfile.getEmail(),
                 userProfile.getPhoneNumber(),
                 userProfile.getStudentId(),
+                userProfile.getMajor(),
                 userProfile.getGender()
         );
     }

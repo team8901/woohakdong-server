@@ -21,12 +21,15 @@ public record UserProfileCreateRequest(
         @NotBlank(message = "학번은 필수입니다.")
         String studentId,
 
+        @Schema(example = "컴퓨터공학과", description = "사용자의 전공")
+        String major,
+
         @Schema(example = "MALE", description = "사용자의 성별")
         @NotNull(message = "성별은 필수입니다.")
         Gender gender
 ) {
     public UserProfileCreateCommand toCommandModel() {
-        return new UserProfileCreateCommand(nickname, phoneNumber, studentId, gender);
+        return new UserProfileCreateCommand(nickname, phoneNumber, studentId, major, gender);
     }
 
 }

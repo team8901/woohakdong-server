@@ -4,6 +4,7 @@ public record UserProfileCreateCommand(
         String nickname,
         String phoneNumber,
         String studentId,
+        String major,
         Gender gender
 ) {
 }

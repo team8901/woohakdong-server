@@ -13,7 +13,8 @@ public record ClubMembershipResponse(
         String name,
         String email,
         String phoneNumber,
-        String studentId
+        String studentId,
+        String major
 ) {
     public static ClubMembershipResponse of(ClubMembershipEntity membership) {
         return new ClubMembershipResponse(
@@ -24,7 +25,8 @@ public record ClubMembershipResponse(
                 membership.getUserProfile().getName(),
                 membership.getUserProfile().getEmail(),
                 membership.getUserProfile().getPhoneNumber(),
-                membership.getUserProfile().getStudentId()
+                membership.getUserProfile().getStudentId(),
+                membership.getUserProfile().getMajor()
         );
     }
 }

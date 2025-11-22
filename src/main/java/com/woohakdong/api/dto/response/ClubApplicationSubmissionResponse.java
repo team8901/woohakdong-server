@@ -32,7 +32,8 @@ public record ClubApplicationSubmissionResponse(
             String name,
             String studentId,
             String phoneNumber,
-            String email
+            String email,
+            String major
     ) {
         public static UserInfoDto of(UserProfileEntity userProfile) {
             return new UserInfoDto(
@@ -40,7 +41,8 @@ public record ClubApplicationSubmissionResponse(
                     userProfile.getName(),
                     userProfile.getStudentId(),
                     userProfile.getPhoneNumber(),
-                    userProfile.getEmail()
+                    userProfile.getEmail(),
+                    userProfile.getMajor()
             );
         }
 
