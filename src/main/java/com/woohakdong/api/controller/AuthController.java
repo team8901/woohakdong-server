@@ -46,6 +46,15 @@ public class AuthController {
                                                HttpServletResponse response) {
         AuthTokensDto authTokensDto = authFacade.socialLogin(request);
 
+        // Access Token을 쿠키로 설정 (SSR에서 읽어야 하므로 httpOnly=false)
+        ResponseCookie accessTokenCookie = ResponseCookie.from("accessToken", authTokensDto.accessToken())
+                .httpOnly(true)
+                .secure(cookieSecure)
+                .path("/")
+                .maxAge(Duration.ofHours(1)) // 1시간
+                .sameSite(cookieSameSite)
+                .build();
+
         // Refresh Token을 HttpOnly 쿠키로 설정
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", authTokensDto.refreshToken())
                 .httpOnly(true)
@@ -55,15 +64,17 @@ public class AuthController {
                 .sameSite(cookieSameSite)
                 .build();
 
+        response.addHeader("Set-Cookie", accessTokenCookie.toString());
         response.addHeader("Set-Cookie", refreshTokenCookie.toString());
 
-        // Response에서는 access token만 반환
+        // Response에서는 access token도 반환 (기존 호환성 유지)
         return new AuthSocialLoginResponse(authTokensDto.accessToken());
     }
 
     @Operation(summary = "Access Token 재발급", description = "Refresh Token을 이용하여 새로운 Access Token을 발급받습니다.")
     @PostMapping("/refresh")
-    public AuthSocialLoginResponse refreshAccessToken(HttpServletRequest request) {
+    public AuthSocialLoginResponse refreshAccessToken(HttpServletRequest request,
+                                                      HttpServletResponse response) {
         // 쿠키에서 Refresh Token 추출
         Cookie[] cookies = request.getCookies();
         String refreshToken = null;
@@ -84,7 +95,18 @@ public class AuthController {
         // 새로운 Access Token 발급
         String newAccessToken = authFacade.refreshAccessToken(refreshToken);
 
-        // Response에서는 access token만 반환
+        // Access Token을 쿠키로 설정 (SSR에서 읽어야 하므로 httpOnly=false)
+        ResponseCookie accessTokenCookie = ResponseCookie.from("accessToken", newAccessToken)
+                .httpOnly(false)
+                .secure(cookieSecure)
+                .path("/")
+                .maxAge(Duration.ofHours(1)) // 1시간
+                .sameSite(cookieSameSite)
+                .build();
+
+        response.addHeader("Set-Cookie", accessTokenCookie.toString());
+
+        // Response에서는 access token도 반환 (기존 호환성 유지)
         return new AuthSocialLoginResponse(newAccessToken);
     }
 
