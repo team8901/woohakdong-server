@@ -1,6 +1,8 @@
 package com.woohakdong.api.controller;
 
+import com.woohakdong.api.dto.request.ClubItemRegisterRequest;
 import com.woohakdong.api.dto.response.ClubItemHistoryResponse;
+import com.woohakdong.api.dto.response.ClubItemIdResponse;
 import com.woohakdong.api.dto.response.ClubItemResponse;
 import com.woohakdong.api.dto.response.ListWrapper;
 import com.woohakdong.api.facade.ClubItemFacade;
@@ -8,10 +10,13 @@ import com.woohakdong.domain.clubitem.model.ClubItemCategory;
 import com.woohakdong.framework.security.RequestUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +38,16 @@ public class ClubItemController {
             @RequestParam(required = false) ClubItemCategory category
     ) {
         return clubItemFacade.getClubItems(clubId, keyword, category);
+    }
+
+    @Operation(summary = "동아리 물품 등록", description = "특정 동아리에 새로운 물품을 등록합니다.")
+    @PostMapping
+    public ClubItemIdResponse addClubItem(
+            @AuthenticationPrincipal RequestUser user,
+            @PathVariable Long clubId,
+            @Valid @RequestBody ClubItemRegisterRequest request
+    ) {
+        return clubItemFacade.addClubItem(clubId, request.toCommand());
     }
 
     @Operation(summary = "동아리 물품 대여 내역 조회", description = "특정 동아리의 물품 대여 내역을 조회합니다.")

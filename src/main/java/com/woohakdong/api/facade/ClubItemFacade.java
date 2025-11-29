@@ -1,12 +1,14 @@
 package com.woohakdong.api.facade;
 
 import com.woohakdong.api.dto.response.ClubItemHistoryResponse;
+import com.woohakdong.api.dto.response.ClubItemIdResponse;
 import com.woohakdong.api.dto.response.ClubItemResponse;
 import com.woohakdong.api.dto.response.ListWrapper;
 import com.woohakdong.domain.clubitem.domain.ClubItemService;
 import com.woohakdong.domain.clubitem.model.ClubItemCategory;
 import com.woohakdong.domain.clubitem.model.ClubItemEntity;
 import com.woohakdong.domain.clubitem.model.ClubItemHistoryEntity;
+import com.woohakdong.domain.clubitem.model.ClubItemRegisterCommand;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -22,6 +24,11 @@ public class ClubItemFacade {
         return ListWrapper.of(items.stream()
                 .map(ClubItemResponse::from)
                 .toList());
+    }
+
+    public ClubItemIdResponse addClubItem(Long clubId, ClubItemRegisterCommand command) {
+        Long clubItemId = clubItemService.registerClubItem(clubId, command);
+        return ClubItemIdResponse.of(clubItemId);
     }
 
     public ListWrapper<ClubItemHistoryResponse> getClubItemHistory(Long clubId) {

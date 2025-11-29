@@ -1,10 +1,13 @@
 package com.woohakdong.domain.clubitem.domain;
 
+import com.woohakdong.domain.club.domain.ClubDomainService;
+import com.woohakdong.domain.club.model.ClubEntity;
 import com.woohakdong.domain.clubitem.infrastructure.storage.repository.ClubItemHistoryRepository;
 import com.woohakdong.domain.clubitem.infrastructure.storage.repository.ClubItemRepository;
 import com.woohakdong.domain.clubitem.model.ClubItemCategory;
 import com.woohakdong.domain.clubitem.model.ClubItemEntity;
 import com.woohakdong.domain.clubitem.model.ClubItemHistoryEntity;
+import com.woohakdong.domain.clubitem.model.ClubItemRegisterCommand;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,7 @@ public class ClubItemService {
 
     private final ClubItemRepository clubItemRepository;
     private final ClubItemHistoryRepository clubItemHistoryRepository;
+    private final ClubDomainService clubDomainService;
 
     public List<ClubItemEntity> getClubItems(Long clubId, String keyword, ClubItemCategory category) {
         return clubItemRepository.findByClubIdWithFilters(clubId, keyword, category);
@@ -24,5 +28,23 @@ public class ClubItemService {
 
     public List<ClubItemHistoryEntity> getClubItemHistory(Long clubId) {
         return clubItemHistoryRepository.findByClubIdWithDetails(clubId);
+    }
+
+    @Transactional
+    public Long registerClubItem(Long clubId, ClubItemRegisterCommand command) {
+        ClubEntity club = clubDomainService.getById(clubId);
+
+        ClubItemEntity clubItem = ClubItemEntity.create(
+                club,
+                command.name(),
+                command.photo(),
+                command.description(),
+                command.location(),
+                command.category(),
+                command.rentalMaxDay()
+        );
+
+        ClubItemEntity savedItem = clubItemRepository.save(clubItem);
+        return savedItem.getId();
     }
 }
