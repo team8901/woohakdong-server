@@ -1,7 +1,9 @@
 package com.woohakdong.integration;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -9,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.woohakdong.api.dto.request.ClubItemRegisterRequest;
+import com.woohakdong.api.dto.request.ClubItemUpdateRequest;
 import com.woohakdong.domain.club.infrastructure.storage.ClubRepository;
 import com.woohakdong.domain.club.model.ClubEntity;
 import com.woohakdong.domain.club.model.ClubRegisterCommand;
@@ -220,5 +223,102 @@ class ClubItemIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(invalidRequest))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("물품 수정")
+    @WithMockUser
+    void updateClubItem() throws Exception {
+        // given: 물품 등록
+        ClubItemRegisterRequest registerRequest = new ClubItemRegisterRequest(
+                "캠핑 텐트", null, "4인용 텐트", "창고", ClubItemCategory.SPORT, 7
+        );
+
+        String response = mockMvc.perform(post("/api/clubs/{clubId}/items", clubId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(registerRequest)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        Long itemId = objectMapper.readTree(response).get("clubItemId").asLong();
+
+        // when: 물품 수정
+        ClubItemUpdateRequest updateRequest = new ClubItemUpdateRequest(
+                "캠핑 텐트 (수정됨)",
+                "https://example.com/new-photo.jpg",
+                "6인용 대형 텐트로 변경",
+                "동아리방",
+                ClubItemCategory.SPORT,
+                14,
+                false
+        );
+
+        mockMvc.perform(put("/api/clubs/{clubId}/items/{itemId}", clubId, itemId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateRequest)))
+                .andExpect(status().isOk());
+
+        // then: 수정 내용 확인
+        mockMvc.perform(get("/api/clubs/{clubId}/items", clubId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[0].name").value("캠핑 텐트 (수정됨)"))
+                .andExpect(jsonPath("$.data[0].description").value("6인용 대형 텐트로 변경"))
+                .andExpect(jsonPath("$.data[0].location").value("동아리방"))
+                .andExpect(jsonPath("$.data[0].rentalMaxDay").value(14))
+                .andExpect(jsonPath("$.data[0].available").value(false));
+    }
+
+    @Test
+    @DisplayName("물품 삭제 (soft delete)")
+    @WithMockUser
+    void deleteClubItem() throws Exception {
+        // given: 물품 등록
+        ClubItemRegisterRequest registerRequest = new ClubItemRegisterRequest(
+                "삭제할 물품", null, null, null, ClubItemCategory.ETC, 7
+        );
+
+        String response = mockMvc.perform(post("/api/clubs/{clubId}/items", clubId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(registerRequest)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        Long itemId = objectMapper.readTree(response).get("clubItemId").asLong();
+
+        // 등록 확인
+        mockMvc.perform(get("/api/clubs/{clubId}/items", clubId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.length()").value(1));
+
+        // when: 물품 삭제
+        mockMvc.perform(delete("/api/clubs/{clubId}/items/{itemId}", clubId, itemId))
+                .andExpect(status().isOk());
+
+        // then: 조회 시 보이지 않음 (soft delete)
+        mockMvc.perform(get("/api/clubs/{clubId}/items", clubId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.length()").value(0));
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 물품 수정 시 404")
+    @WithMockUser
+    void updateNonExistentItem() throws Exception {
+        ClubItemUpdateRequest updateRequest = new ClubItemUpdateRequest(
+                "존재하지 않는 물품", null, null, null, ClubItemCategory.ETC, 7, true
+        );
+
+        mockMvc.perform(put("/api/clubs/{clubId}/items/{itemId}", clubId, 9999L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateRequest)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 물품 삭제 시 404")
+    @WithMockUser
+    void deleteNonExistentItem() throws Exception {
+        mockMvc.perform(delete("/api/clubs/{clubId}/items/{itemId}", clubId, 9999L))
+                .andExpect(status().isNotFound());
     }
 }

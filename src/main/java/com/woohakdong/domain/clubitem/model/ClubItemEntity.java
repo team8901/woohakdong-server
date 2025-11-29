@@ -64,6 +64,9 @@ public class ClubItemEntity {
     @Column(name = "rental_time")
     private Integer rentalTime;
 
+    @Column(name = "deleted", nullable = false)
+    private Boolean deleted;
+
     public static ClubItemEntity create(
             ClubEntity club,
             String name,
@@ -85,8 +88,23 @@ public class ClubItemEntity {
                 true,   // 기본값: 대여 가능
                 false,  // 기본값: 사용 중 아님
                 null,
-                0
+                0,
+                false   // 기본값: 삭제되지 않음
         );
+    }
+
+    public void update(ClubItemUpdateCommand command) {
+        this.name = command.name();
+        this.photo = command.photo();
+        this.description = command.description();
+        this.location = command.location();
+        this.category = command.category();
+        this.rentalMaxDay = command.rentalMaxDay();
+        this.available = command.available();
+    }
+
+    public void delete() {
+        this.deleted = true;
     }
 
     public void rent(LocalDate rentalDate, Integer rentalTime) {

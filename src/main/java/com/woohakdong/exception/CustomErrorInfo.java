@@ -39,6 +39,7 @@ public enum CustomErrorInfo {
     NOT_FOUND_CLUB_MEMBERSHIP(404, "해당 유저의 동아리 맴버십을 찾을 수 없습니다.", "404003"),
     NOT_FOUND_CLUB_APPLICATION_FORM(404, "해당 동아리의 신청 양식을 찾을 수 없습니다.", "404004"),
     NOT_FOUND_NOTICE(404, "해당 공지사항을 찾을 수 없습니다.", "404005"),
+    NOT_FOUND_CLUB_ITEM(404, "해당 물품을 찾을 수 없습니다.", "404006"),
 
 
     // 409 Conflict

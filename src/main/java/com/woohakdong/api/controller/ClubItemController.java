@@ -1,6 +1,7 @@
 package com.woohakdong.api.controller;
 
 import com.woohakdong.api.dto.request.ClubItemRegisterRequest;
+import com.woohakdong.api.dto.request.ClubItemUpdateRequest;
 import com.woohakdong.api.dto.response.ClubItemHistoryResponse;
 import com.woohakdong.api.dto.response.ClubItemIdResponse;
 import com.woohakdong.api.dto.response.ClubItemResponse;
@@ -13,9 +14,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,6 +51,27 @@ public class ClubItemController {
             @Valid @RequestBody ClubItemRegisterRequest request
     ) {
         return clubItemFacade.addClubItem(clubId, request.toCommand());
+    }
+
+    @Operation(summary = "동아리 물품 수정", description = "특정 동아리의 물품 정보를 수정합니다.")
+    @PutMapping("/{itemId}")
+    public void updateClubItem(
+            @AuthenticationPrincipal RequestUser user,
+            @PathVariable Long clubId,
+            @PathVariable Long itemId,
+            @Valid @RequestBody ClubItemUpdateRequest request
+    ) {
+        clubItemFacade.updateClubItem(clubId, itemId, request.toCommand());
+    }
+
+    @Operation(summary = "동아리 물품 삭제", description = "특정 동아리의 물품을 삭제합니다.")
+    @DeleteMapping("/{itemId}")
+    public void deleteClubItem(
+            @AuthenticationPrincipal RequestUser user,
+            @PathVariable Long clubId,
+            @PathVariable Long itemId
+    ) {
+        clubItemFacade.deleteClubItem(clubId, itemId);
     }
 
     @Operation(summary = "동아리 물품 대여 내역 조회", description = "특정 동아리의 물품 대여 내역을 조회합니다.")

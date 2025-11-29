@@ -9,6 +9,7 @@ import com.woohakdong.domain.clubitem.model.ClubItemCategory;
 import com.woohakdong.domain.clubitem.model.ClubItemEntity;
 import com.woohakdong.domain.clubitem.model.ClubItemHistoryEntity;
 import com.woohakdong.domain.clubitem.model.ClubItemRegisterCommand;
+import com.woohakdong.domain.clubitem.model.ClubItemUpdateCommand;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,14 @@ public class ClubItemFacade {
     public ClubItemIdResponse addClubItem(Long clubId, ClubItemRegisterCommand command) {
         Long clubItemId = clubItemService.registerClubItem(clubId, command);
         return ClubItemIdResponse.of(clubItemId);
+    }
+
+    public void updateClubItem(Long clubId, Long itemId, ClubItemUpdateCommand command) {
+        clubItemService.updateClubItem(clubId, itemId, command);
+    }
+
+    public void deleteClubItem(Long clubId, Long itemId) {
+        clubItemService.deleteClubItem(clubId, itemId);
     }
 
     public ListWrapper<ClubItemHistoryResponse> getClubItemHistory(Long clubId) {

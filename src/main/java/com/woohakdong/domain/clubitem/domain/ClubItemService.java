@@ -1,5 +1,7 @@
 package com.woohakdong.domain.clubitem.domain;
 
+import static com.woohakdong.exception.CustomErrorInfo.NOT_FOUND_CLUB_ITEM;
+
 import com.woohakdong.domain.club.domain.ClubDomainService;
 import com.woohakdong.domain.club.model.ClubEntity;
 import com.woohakdong.domain.clubitem.infrastructure.storage.repository.ClubItemHistoryRepository;
@@ -8,6 +10,8 @@ import com.woohakdong.domain.clubitem.model.ClubItemCategory;
 import com.woohakdong.domain.clubitem.model.ClubItemEntity;
 import com.woohakdong.domain.clubitem.model.ClubItemHistoryEntity;
 import com.woohakdong.domain.clubitem.model.ClubItemRegisterCommand;
+import com.woohakdong.domain.clubitem.model.ClubItemUpdateCommand;
+import com.woohakdong.exception.CustomException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -46,5 +50,21 @@ public class ClubItemService {
 
         ClubItemEntity savedItem = clubItemRepository.save(clubItem);
         return savedItem.getId();
+    }
+
+    @Transactional
+    public void updateClubItem(Long clubId, Long itemId, ClubItemUpdateCommand command) {
+        ClubItemEntity clubItem = clubItemRepository.findByIdAndClubIdAndDeletedFalse(itemId, clubId)
+                .orElseThrow(() -> new CustomException(NOT_FOUND_CLUB_ITEM));
+
+        clubItem.update(command);
+    }
+
+    @Transactional
+    public void deleteClubItem(Long clubId, Long itemId) {
+        ClubItemEntity clubItem = clubItemRepository.findByIdAndClubIdAndDeletedFalse(itemId, clubId)
+                .orElseThrow(() -> new CustomException(NOT_FOUND_CLUB_ITEM));
+
+        clubItem.delete();
     }
 }
