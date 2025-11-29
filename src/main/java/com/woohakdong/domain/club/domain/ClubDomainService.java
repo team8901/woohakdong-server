@@ -94,4 +94,10 @@ public class ClubDomainService {
         return clubMemberShipRepository.findByIdAndClub(clubMembershipId, club)
                 .orElseThrow(() -> new CustomException(NOT_FOUND_CLUB_MEMBERSHIP));
     }
+
+    public ClubMembershipEntity getClubMemberByUserProfile(Long clubId, UserProfileEntity userProfile) {
+        ClubEntity club = getById(clubId);
+        return clubMemberShipRepository.findByClubAndUserProfile(club, userProfile)
+                .orElseThrow(() -> new CustomException(NOT_FOUND_CLUB_MEMBERSHIP));
+    }
 }

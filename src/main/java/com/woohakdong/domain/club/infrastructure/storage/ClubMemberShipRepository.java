@@ -21,4 +21,6 @@ public interface ClubMemberShipRepository extends JpaRepository<ClubMembershipEn
 
     @EntityGraph(attributePaths = {"userProfile"})
     Optional<ClubMembershipEntity> findByIdAndClub(Long id, ClubEntity club);
+
+    Optional<ClubMembershipEntity> findByClubAndUserProfile(ClubEntity club, UserProfileEntity userProfile);
 }

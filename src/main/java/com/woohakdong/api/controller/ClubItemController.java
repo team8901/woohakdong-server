@@ -1,9 +1,12 @@
 package com.woohakdong.api.controller;
 
 import com.woohakdong.api.dto.request.ClubItemRegisterRequest;
+import com.woohakdong.api.dto.request.ClubItemRentRequest;
+import com.woohakdong.api.dto.request.ClubItemReturnRequest;
 import com.woohakdong.api.dto.request.ClubItemUpdateRequest;
 import com.woohakdong.api.dto.response.ClubItemHistoryResponse;
 import com.woohakdong.api.dto.response.ClubItemIdResponse;
+import com.woohakdong.api.dto.response.ClubItemRentResponse;
 import com.woohakdong.api.dto.response.ClubItemResponse;
 import com.woohakdong.api.dto.response.ListWrapper;
 import com.woohakdong.api.facade.ClubItemFacade;
@@ -72,6 +75,29 @@ public class ClubItemController {
             @PathVariable Long itemId
     ) {
         clubItemFacade.deleteClubItem(clubId, itemId);
+    }
+
+    @Operation(summary = "동아리 물품 대여", description = "특정 동아리의 물품을 대여합니다.")
+    @PostMapping("/{itemId}/rent")
+    public ClubItemRentResponse rentClubItem(
+            @AuthenticationPrincipal RequestUser user,
+            @PathVariable Long clubId,
+            @PathVariable Long itemId,
+            @Valid @RequestBody ClubItemRentRequest request
+    ) {
+        return clubItemFacade.rentClubItem(clubId, itemId, user.getUserAuthId(), request.rentalDays());
+    }
+
+    @Operation(summary = "동아리 물품 반납", description = "대여한 물품을 반납합니다.")
+    @PostMapping("/{itemId}/return")
+    public void returnClubItem(
+            @AuthenticationPrincipal RequestUser user,
+            @PathVariable Long clubId,
+            @PathVariable Long itemId,
+            @RequestBody(required = false) ClubItemReturnRequest request
+    ) {
+        String returnImage = request != null ? request.returnImage() : null;
+        clubItemFacade.returnClubItem(clubId, itemId, returnImage);
     }
 
     @Operation(summary = "동아리 물품 대여 내역 조회", description = "특정 동아리의 물품 대여 내역을 조회합니다.")
