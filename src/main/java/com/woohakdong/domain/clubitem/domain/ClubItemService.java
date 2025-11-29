@@ -36,6 +36,15 @@ public class ClubItemService {
         return clubItemRepository.findByClubIdWithFilters(clubId, keyword, category);
     }
 
+    public ClubItemEntity getClubItem(Long clubId, Long itemId) {
+        return clubItemRepository.findByIdAndClubIdAndDeletedFalse(itemId, clubId)
+                .orElseThrow(() -> new CustomException(NOT_FOUND_CLUB_ITEM));
+    }
+
+    public ClubItemHistoryEntity getActiveRental(Long itemId) {
+        return clubItemHistoryRepository.findActiveRentalByItemId(itemId).orElse(null);
+    }
+
     public List<ClubItemHistoryEntity> getClubItemHistory(Long clubId) {
         return clubItemHistoryRepository.findByClubIdWithDetails(clubId);
     }

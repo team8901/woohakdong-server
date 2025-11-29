@@ -1,5 +1,6 @@
 package com.woohakdong.api.facade;
 
+import com.woohakdong.api.dto.response.ClubItemDetailResponse;
 import com.woohakdong.api.dto.response.ClubItemHistoryResponse;
 import com.woohakdong.api.dto.response.ClubItemIdResponse;
 import com.woohakdong.api.dto.response.ClubItemRentResponse;
@@ -32,6 +33,12 @@ public class ClubItemFacade {
         return ListWrapper.of(items.stream()
                 .map(ClubItemResponse::from)
                 .toList());
+    }
+
+    public ClubItemDetailResponse getClubItem(Long clubId, Long itemId) {
+        ClubItemEntity item = clubItemService.getClubItem(clubId, itemId);
+        ClubItemHistoryEntity activeRental = clubItemService.getActiveRental(itemId);
+        return ClubItemDetailResponse.from(item, activeRental);
     }
 
     public ClubItemIdResponse addClubItem(Long clubId, ClubItemRegisterCommand command) {

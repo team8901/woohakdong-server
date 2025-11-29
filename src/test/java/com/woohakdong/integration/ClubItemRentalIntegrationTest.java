@@ -13,7 +13,11 @@ import com.woohakdong.domain.club.model.ClubEntity;
 import com.woohakdong.domain.club.model.ClubMemberRole;
 import com.woohakdong.domain.club.model.ClubMembershipEntity;
 import com.woohakdong.domain.club.model.ClubRegisterCommand;
+import com.woohakdong.api.dto.response.ClubItemDetailResponse;
+import com.woohakdong.api.dto.response.ClubItemResponse;
+import com.woohakdong.api.facade.ClubItemFacade;
 import com.woohakdong.domain.clubitem.domain.ClubItemService;
+import com.woohakdong.domain.clubitem.model.ClubItemRegisterCommand;
 import com.woohakdong.domain.clubitem.infrastructure.storage.repository.ClubItemHistoryRepository;
 import com.woohakdong.domain.clubitem.infrastructure.storage.repository.ClubItemRepository;
 import com.woohakdong.domain.clubitem.model.ClubItemCategory;
@@ -43,6 +47,9 @@ class ClubItemRentalIntegrationTest {
 
     @Autowired
     private ClubItemService clubItemService;
+
+    @Autowired
+    private ClubItemFacade clubItemFacade;
 
     @Autowired
     private ClubRepository clubRepository;
@@ -212,5 +219,51 @@ class ClubItemRentalIntegrationTest {
         assertThat(histories).hasSize(1);
         assertThat(histories.get(0).getClubItem().getName()).isEqualTo("테스트 물품");
         assertThat(histories.get(0).getClubMembership().getNickname()).isEqualTo("테스터");
+    }
+
+    @Test
+    @DisplayName("물품 등록 → 대여 → 목록 조회(using=true) → 단일 조회(대여자 정보) 전체 플로우")
+    void fullRentalFlow_registerRentAndVerify() {
+        // 1. 물품 등록
+        ClubItemRegisterCommand registerCommand = new ClubItemRegisterCommand(
+                "맥북 프로",
+                "https://example.com/macbook.jpg",
+                "M3 Pro 맥북",
+                "동아리방 책상",
+                ClubItemCategory.DIGITAL,
+                14
+        );
+        Long itemId = clubItemService.registerClubItem(club.getId(), registerCommand);
+
+        // 등록 확인
+        ClubItemDetailResponse beforeRent = clubItemFacade.getClubItem(club.getId(), itemId);
+        assertThat(beforeRent.name()).isEqualTo("맥북 프로");
+        assertThat(beforeRent.using()).isFalse();
+        assertThat(beforeRent.borrowerId()).isNull();
+        assertThat(beforeRent.borrowerName()).isNull();
+
+        // 2. 대여
+        ClubItemEntity newItem = clubItemRepository.findById(itemId).orElseThrow();
+        clubItemService.rentClubItem(club.getId(), itemId, membership, 7);
+
+        // 3. 물품 목록 조회 - using=true 확인
+        var itemList = clubItemFacade.getClubItems(club.getId(), null, null);
+        ClubItemResponse rentedItem = itemList.data().stream()
+                .filter(i -> i.id().equals(itemId))
+                .findFirst()
+                .orElseThrow();
+
+        assertThat(rentedItem.using()).isTrue();
+        assertThat(rentedItem.available()).isTrue();
+        assertThat(rentedItem.rentalDate()).isEqualTo(LocalDate.now());
+
+        // 4. 물품 단일 조회 - 대여자 정보 확인
+        ClubItemDetailResponse detail = clubItemFacade.getClubItem(club.getId(), itemId);
+
+        assertThat(detail.using()).isTrue();
+        assertThat(detail.borrowerId()).isEqualTo(membership.getId());
+        assertThat(detail.borrowerName()).isEqualTo("테스터");
+        assertThat(detail.dueDate()).isEqualTo(LocalDate.now().plusDays(7));
+        assertThat(detail.rentalDate()).isEqualTo(LocalDate.now());
     }
 }

@@ -4,6 +4,7 @@ import com.woohakdong.api.dto.request.ClubItemRegisterRequest;
 import com.woohakdong.api.dto.request.ClubItemRentRequest;
 import com.woohakdong.api.dto.request.ClubItemReturnRequest;
 import com.woohakdong.api.dto.request.ClubItemUpdateRequest;
+import com.woohakdong.api.dto.response.ClubItemDetailResponse;
 import com.woohakdong.api.dto.response.ClubItemHistoryResponse;
 import com.woohakdong.api.dto.response.ClubItemIdResponse;
 import com.woohakdong.api.dto.response.ClubItemRentResponse;
@@ -54,6 +55,16 @@ public class ClubItemController {
             @Valid @RequestBody ClubItemRegisterRequest request
     ) {
         return clubItemFacade.addClubItem(clubId, request.toCommand());
+    }
+
+    @Operation(summary = "동아리 물품 단일 조회", description = "특정 동아리의 물품 상세 정보를 조회합니다. 대여 중인 경우 대여자 정보도 포함됩니다.")
+    @GetMapping("/{itemId}")
+    public ClubItemDetailResponse getClubItem(
+            @AuthenticationPrincipal RequestUser user,
+            @PathVariable Long clubId,
+            @PathVariable Long itemId
+    ) {
+        return clubItemFacade.getClubItem(clubId, itemId);
     }
 
     @Operation(summary = "동아리 물품 수정", description = "특정 동아리의 물품 정보를 수정합니다.")
