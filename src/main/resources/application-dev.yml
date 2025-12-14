@@ -23,6 +23,7 @@ jwt:
 cookie:
   secure: true
   same-site: None
+  domain: .woohakdong.com
 
 logging:
   level:

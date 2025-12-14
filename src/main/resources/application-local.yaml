@@ -27,6 +27,8 @@ jwt:
 cookie:
   secure: false  # 로컬 환경에서는 HTTP 허용
   same-site: None  # localhost 간 cross-origin 허용
+  domain: .woohakdong.com
+
 
 firebase:
   credentials:

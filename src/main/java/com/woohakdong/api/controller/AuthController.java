@@ -40,6 +40,9 @@ public class AuthController {
     @Value("${cookie.same-site}")
     private String cookieSameSite;
 
+    @Value("${cookie.domain}")
+    private String cookieDomain;
+
     @Operation(summary = "소셜 로그인", description = "소셜 로그인을 통해, JWT 토큰을 발급받습니다.")
     @PostMapping("/social-login")
     public AuthSocialLoginResponse socialLogin(@RequestBody @Valid AuthSocialLoginRequest request,
@@ -51,6 +54,7 @@ public class AuthController {
                 .httpOnly(true)
                 .secure(cookieSecure)
                 .path("/")
+                .domain(cookieDomain)
                 .maxAge(Duration.ofHours(1)) // 1시간
                 .sameSite(cookieSameSite)
                 .build();
@@ -60,6 +64,7 @@ public class AuthController {
                 .httpOnly(true)
                 .secure(cookieSecure)
                 .path("/")
+                .domain(cookieDomain)
                 .maxAge(Duration.ofDays(7)) // 7일
                 .sameSite(cookieSameSite)
                 .build();
@@ -100,6 +105,7 @@ public class AuthController {
                 .httpOnly(false)
                 .secure(cookieSecure)
                 .path("/")
+                .domain(cookieDomain)
                 .maxAge(Duration.ofHours(1)) // 1시간
                 .sameSite(cookieSameSite)
                 .build();

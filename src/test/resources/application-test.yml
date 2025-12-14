@@ -27,3 +27,4 @@ jwt:
 cookie:
   secure: false
   same-site: Lax
+  domain: .woohakdong.com
