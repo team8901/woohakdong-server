@@ -53,7 +53,7 @@ public class ClubService {
     @Transactional
     public void updateClubInfo(UserProfileEntity userProfile, ClubUpdateCommand command, Long clubId) {
         ClubEntity club = clubDomainService.getById(clubId);
-        ClubMembershipEntity clubMembership = clubDomainService.getClubMembership(userProfile);
+        ClubMembershipEntity clubMembership = clubDomainService.getClubMemberByUserProfile(clubId, userProfile);
         club.verifyOwner(clubMembership);
         club.updateInfo(command);
         clubDomainService.updateClub(club);
@@ -67,7 +67,7 @@ public class ClubService {
     public Long createClubApplicationForm(Long clubId, UserProfileEntity userProfile,
                                           ClubApplicationFormCreateCommand command) {
         ClubEntity club = clubDomainService.getById(clubId);
-        ClubMembershipEntity clubMembership = clubDomainService.getClubMembership(userProfile);
+        ClubMembershipEntity clubMembership = clubDomainService.getClubMemberByUserProfile(clubId, userProfile);
         club.verifyOwner(clubMembership);
 
         ClubApplicationFormEntity clubApplicationForm = ClubApplicationFormEntity.create(command, club);
@@ -118,7 +118,7 @@ public class ClubService {
         ClubEntity club = clubDomainService.getById(clubId);
 
         // Club Owner만 신청서 열람이 가능하다.
-        ClubMembershipEntity clubMembership = clubDomainService.getClubMembership(userProfile);
+        ClubMembershipEntity clubMembership = clubDomainService.getClubMemberByUserProfile(clubId, userProfile);
         club.verifyOwner(clubMembership);
 
         clubApplicationFormRepository.findById(applicationFormId).orElseThrow(

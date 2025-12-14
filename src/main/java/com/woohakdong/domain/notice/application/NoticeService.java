@@ -25,7 +25,7 @@ public class NoticeService {
     @Transactional
     public Long createNotice(Long clubId, UserProfileEntity userProfile, NoticeCreateCommand command) {
         ClubEntity club = clubDomainService.getById(clubId);
-        ClubMembershipEntity membership = clubDomainService.getClubMembership(userProfile);
+        ClubMembershipEntity membership = clubDomainService.getClubMemberByUserProfile(clubId, userProfile);
         // TODO: 권한 체크 (임원 이상만 작성 가능 등)
         return noticeDomainService.createNotice(command, club, membership);
     }

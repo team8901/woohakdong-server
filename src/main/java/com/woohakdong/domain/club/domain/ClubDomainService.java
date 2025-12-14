@@ -70,12 +70,6 @@ public class ClubDomainService {
         clubRepository.save(club);
     }
 
-    public ClubMembershipEntity getClubMembership(UserProfileEntity userProfile) {
-        return clubMemberShipRepository.findByUserProfile(userProfile).orElseThrow(
-                () -> new CustomException(NOT_FOUND_CLUB_MEMBERSHIP)
-        );
-    }
-
     public List<ClubEntity> searchClubs(ClubInfoSearchQuery query) {
         if (query.isEmpty()) {
             return clubRepository.findAll();
