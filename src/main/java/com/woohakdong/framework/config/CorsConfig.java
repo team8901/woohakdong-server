@@ -12,7 +12,8 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.addAllowedOrigin("http://localhost:3000");
         config.addAllowedOrigin("http://localhost:3001");
-        config.addAllowedOrigin("http://local.woohakdong.com");
+        config.addAllowedOrigin("http://local.woohakdong.com:3000");
+        config.addAllowedOrigin("http://local.woohakdong.com:3001");
         config.addAllowedOrigin("https://localhost:3000");
         config.addAllowedOrigin("https://localhost:3001");
         config.addAllowedOrigin("https://www.woohakdong.com");
