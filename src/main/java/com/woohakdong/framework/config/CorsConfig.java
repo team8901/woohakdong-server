@@ -14,8 +14,6 @@ public class CorsConfig {
         config.addAllowedOrigin("https://localhost:3001");
         config.addAllowedOrigin("https://local.woohakdong.com:3000");
         config.addAllowedOrigin("https://local.woohakdong.com:3001");
-        config.addAllowedOrigin("https://localhost:3000");
-        config.addAllowedOrigin("https://localhost:3001");
         config.addAllowedOrigin("https://www.woohakdong.com");
         config.addAllowedOrigin("https://app.woohakdong.com");
         config.addAllowedMethod("*");
