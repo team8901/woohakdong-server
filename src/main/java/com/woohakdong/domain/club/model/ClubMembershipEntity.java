@@ -45,4 +45,15 @@ public class ClubMembershipEntity {
                 club
         );
     }
+
+    public static ClubMembershipEntity createMember(ClubEntity club, UserProfileEntity userProfile) {
+        return new ClubMembershipEntity(
+                null,
+                LocalDate.now(),
+                ClubMemberRole.MEMBER,
+                userProfile,
+                userProfile.getNickname(),
+                club
+        );
+    }
 }

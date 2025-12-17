@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.woohakdong.exception.CustomErrorInfo.NOT_FOUND_CLUB_APPLICATION_FORM;
+import static com.woohakdong.exception.CustomErrorInfo.NOT_FOUND_CLUB_APPLICATION_SUBMISSION;
 
 @Service
 @RequiredArgsConstructor
@@ -134,5 +135,33 @@ public class ClubService {
 
     public ClubMembershipEntity getClubMember(Long clubId, Long clubMembershipId) {
         return clubDomainService.getClubMember(clubId, clubMembershipId);
+    }
+
+    @Transactional
+    public void approveClubApplication(Long clubId, Long applicationFormId, Long submissionId, UserProfileEntity approverProfile) {
+        ClubEntity club = clubDomainService.getById(clubId);
+        ClubMembershipEntity approverMembership = clubDomainService.getClubMemberByUserProfile(clubId, approverProfile);
+        club.verifyOwner(approverMembership);
+
+        ClubApplicationSubmissionEntity submission = clubApplicationSubmissionRepository.findById(submissionId)
+                .orElseThrow(() -> new CustomException(NOT_FOUND_CLUB_APPLICATION_SUBMISSION));
+
+        submission.approve();
+        clubApplicationSubmissionRepository.save(submission);
+
+        clubDomainService.addClubMember(club, submission.getUserProfile());
+    }
+
+    @Transactional
+    public void rejectClubApplication(Long clubId, Long applicationFormId, Long submissionId, UserProfileEntity approverProfile, String rejectionReason) {
+        ClubEntity club = clubDomainService.getById(clubId);
+        ClubMembershipEntity approverMembership = clubDomainService.getClubMemberByUserProfile(clubId, approverProfile);
+        club.verifyOwner(approverMembership);
+
+        ClubApplicationSubmissionEntity submission = clubApplicationSubmissionRepository.findById(submissionId)
+                .orElseThrow(() -> new CustomException(NOT_FOUND_CLUB_APPLICATION_SUBMISSION));
+
+        submission.reject(rejectionReason);
+        clubApplicationSubmissionRepository.save(submission);
     }
 }

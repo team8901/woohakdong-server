@@ -111,4 +111,14 @@ public class ClubFacade {
                 .map(ClubApplicationSubmissionResponse::of)
                 .toList());
     }
+
+    public void approveClubApplication(Long clubId, Long applicationFormId, Long submissionId, Long userAuthId) {
+        UserProfileEntity userProfile = userService.getProfileWithAuthId(userAuthId);
+        clubService.approveClubApplication(clubId, applicationFormId, submissionId, userProfile);
+    }
+
+    public void rejectClubApplication(Long clubId, Long applicationFormId, Long submissionId, Long userAuthId, String rejectionReason) {
+        UserProfileEntity userProfile = userService.getProfileWithAuthId(userAuthId);
+        clubService.rejectClubApplication(clubId, applicationFormId, submissionId, userProfile, rejectionReason);
+    }
 }

@@ -1,6 +1,7 @@
 package com.woohakdong.api.controller;
 
 import com.woohakdong.api.dto.request.ClubApplicationFormCreateRequest;
+import com.woohakdong.api.dto.request.ClubApplicationRejectRequest;
 import com.woohakdong.api.dto.request.ClubApplicationSubmissionRequest;
 import com.woohakdong.api.dto.request.ClubNameValidateRequest;
 import com.woohakdong.api.dto.request.ClubRegisterRequest;
@@ -127,6 +128,28 @@ public class ClubController {
                                                                                         @PathVariable Long applicationFormId) {
         Long userAuthId = user.getUserAuthId();
         return clubFacade.getClubApplicationSubmissions(clubId, applicationFormId, userAuthId);
+    }
+
+    @Operation(summary = "동아리 가입 신청 승인", description = "동아리 가입 신청을 승인합니다. 승인 시 자동으로 동아리 회원으로 등록됩니다. 동아리 회장만 승인할 수 있습니다.")
+    @PostMapping("/{clubId}/application-forms/{applicationFormId}/submissions/{submissionId}/approve")
+    public void approveClubApplication(@AuthenticationPrincipal RequestUser user,
+                                       @PathVariable Long clubId,
+                                       @PathVariable Long applicationFormId,
+                                       @PathVariable Long submissionId) {
+        Long userAuthId = user.getUserAuthId();
+        clubFacade.approveClubApplication(clubId, applicationFormId, submissionId, userAuthId);
+    }
+
+    @Operation(summary = "동아리 가입 신청 거절", description = "동아리 가입 신청을 거절합니다. 거절 사유는 선택적으로 입력할 수 있습니다. 동아리 회장만 거절할 수 있습니다.")
+    @PostMapping("/{clubId}/application-forms/{applicationFormId}/submissions/{submissionId}/reject")
+    public void rejectClubApplication(@AuthenticationPrincipal RequestUser user,
+                                      @PathVariable Long clubId,
+                                      @PathVariable Long applicationFormId,
+                                      @PathVariable Long submissionId,
+                                      @RequestBody(required = false) ClubApplicationRejectRequest request) {
+        Long userAuthId = user.getUserAuthId();
+        String rejectionReason = request != null ? request.rejectionReason() : null;
+        clubFacade.rejectClubApplication(clubId, applicationFormId, submissionId, userAuthId, rejectionReason);
     }
 
 }

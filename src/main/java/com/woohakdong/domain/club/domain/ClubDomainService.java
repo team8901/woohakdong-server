@@ -94,4 +94,14 @@ public class ClubDomainService {
         return clubMemberShipRepository.findByClubAndUserProfile(club, userProfile)
                 .orElseThrow(() -> new CustomException(NOT_FOUND_CLUB_MEMBERSHIP));
     }
+
+    @Transactional
+    public void addClubMember(ClubEntity club, UserProfileEntity userProfile) {
+        if (clubMemberShipRepository.existsByClubAndUserProfile(club, userProfile)) {
+            throw new CustomException(CONFLICT_ALREADY_JOINED_CLUB);
+        }
+
+        ClubMembershipEntity membership = ClubMembershipEntity.createMember(club, userProfile);
+        clubMemberShipRepository.save(membership);
+    }
 }

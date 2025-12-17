@@ -41,6 +41,7 @@ public enum CustomErrorInfo {
     NOT_FOUND_NOTICE(404, "해당 공지사항을 찾을 수 없습니다.", "404005"),
     NOT_FOUND_CLUB_ITEM(404, "해당 물품을 찾을 수 없습니다.", "404006"),
     NOT_FOUND_CLUB_ITEM_HISTORY(404, "해당 대여 내역을 찾을 수 없습니다.", "404007"),
+    NOT_FOUND_CLUB_APPLICATION_SUBMISSION(404, "해당 가입 신청서를 찾을 수 없습니다.", "404008"),
 
 
     // 409 Conflict
@@ -51,6 +52,7 @@ public enum CustomErrorInfo {
     CONFLICT_ITEM_ALREADY_RENTED(409, "해당 물품은 이미 대여 중입니다.", "409005"),
     CONFLICT_RENTAL_DAYS_EXCEEDED(409, "최대 대여 일수를 초과했습니다.", "409006"),
     CONFLICT_ITEM_NOT_RENTED(409, "해당 물품은 대여 중이 아닙니다.", "409007"),
+    CONFLICT_APPLICATION_ALREADY_PROCESSED(409, "이미 처리된 가입 신청서입니다.", "409008"),
 
 
     // 500 Internal Server Error

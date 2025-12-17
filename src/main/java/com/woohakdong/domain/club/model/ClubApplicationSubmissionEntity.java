@@ -2,6 +2,8 @@ package com.woohakdong.domain.club.model;
 
 import com.woohakdong.domain.club.infrastructure.storage.FormAnswerListConverter;
 import com.woohakdong.domain.user.model.UserProfileEntity;
+import com.woohakdong.exception.CustomErrorInfo;
+import com.woohakdong.exception.CustomException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -53,6 +55,12 @@ public class ClubApplicationSubmissionEntity {
     @Column(name = "application_status", nullable = false)
     private ClubApplicationStatus applicationStatus;
 
+    @Column(name = "rejection_reason")
+    private String rejectionReason;
+
+    @Column(name = "processed_at")
+    private LocalDate processedAt;
+
     public static ClubApplicationSubmissionEntity create(ClubApplicationSubmissionCommand command,
                                                          ClubApplicationFormEntity clubApplicationForm,
                                                          UserProfileEntity userProfile) {
@@ -62,8 +70,27 @@ public class ClubApplicationSubmissionEntity {
                 command.formAnswers(),
                 userProfile,
                 LocalDate.now(),
-                ClubApplicationStatus.PENDING
+                ClubApplicationStatus.PENDING,
+                null,
+                null
         );
+    }
+
+    public void approve() {
+        if (!this.applicationStatus.isPending()) {
+            throw new CustomException(CustomErrorInfo.CONFLICT_APPLICATION_ALREADY_PROCESSED);
+        }
+        this.applicationStatus = ClubApplicationStatus.APPROVED;
+        this.processedAt = LocalDate.now();
+    }
+
+    public void reject(String rejectionReason) {
+        if (!this.applicationStatus.isPending()) {
+            throw new CustomException(CustomErrorInfo.CONFLICT_APPLICATION_ALREADY_PROCESSED);
+        }
+        this.applicationStatus = ClubApplicationStatus.REJECTED;
+        this.rejectionReason = rejectionReason;
+        this.processedAt = LocalDate.now();
     }
 
 }
