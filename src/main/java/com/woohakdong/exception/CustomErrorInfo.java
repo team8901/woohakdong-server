@@ -42,6 +42,7 @@ public enum CustomErrorInfo {
     NOT_FOUND_CLUB_ITEM(404, "해당 물품을 찾을 수 없습니다.", "404006"),
     NOT_FOUND_CLUB_ITEM_HISTORY(404, "해당 대여 내역을 찾을 수 없습니다.", "404007"),
     NOT_FOUND_CLUB_APPLICATION_SUBMISSION(404, "해당 가입 신청서를 찾을 수 없습니다.", "404008"),
+    NOT_FOUND_ACTIVITY(404, "해당 활동 기록을 찾을 수 없습니다.", "404009"),
 
 
     // 409 Conflict
