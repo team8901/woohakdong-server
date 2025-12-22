@@ -1,6 +1,7 @@
 package com.woohakdong.api.facade;
 
 import com.woohakdong.api.dto.request.ActivityCreateRequest;
+import com.woohakdong.api.dto.request.ActivityUpdateRequest;
 import com.woohakdong.api.dto.response.ActivityIdResponse;
 import com.woohakdong.api.dto.response.ActivityResponse;
 import com.woohakdong.api.dto.response.ListWrapper;
@@ -36,5 +37,15 @@ public class ActivityFacade {
     public ActivityResponse getActivity(Long clubId, Long activityId) {
         ActivityEntity activity = activityService.getActivity(clubId, activityId);
         return ActivityResponse.of(activity);
+    }
+
+    public void updateActivity(Long clubId, Long activityId, Long userAuthId, ActivityUpdateRequest request) {
+        UserProfileEntity userProfile = userService.getProfileWithAuthId(userAuthId);
+        activityService.updateActivity(clubId, activityId, userProfile, request.toCommand());
+    }
+
+    public void deleteActivity(Long clubId, Long activityId, Long userAuthId) {
+        UserProfileEntity userProfile = userService.getProfileWithAuthId(userAuthId);
+        activityService.deleteActivity(clubId, activityId, userProfile);
     }
 }

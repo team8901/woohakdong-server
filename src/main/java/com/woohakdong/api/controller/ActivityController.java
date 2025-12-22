@@ -1,6 +1,7 @@
 package com.woohakdong.api.controller;
 
 import com.woohakdong.api.dto.request.ActivityCreateRequest;
+import com.woohakdong.api.dto.request.ActivityUpdateRequest;
 import com.woohakdong.api.dto.response.ActivityIdResponse;
 import com.woohakdong.api.dto.response.ActivityResponse;
 import com.woohakdong.api.dto.response.ListWrapper;
@@ -41,5 +42,24 @@ public class ActivityController {
     public ActivityResponse getActivity(@PathVariable Long clubId,
                                         @PathVariable Long activityId) {
         return activityFacade.getActivity(clubId, activityId);
+    }
+
+    @Operation(summary = "활동 기록 수정", description = "동아리 활동 기록을 수정합니다.")
+    @PutMapping("/{activityId}")
+    public void updateActivity(@AuthenticationPrincipal RequestUser user,
+                               @PathVariable Long clubId,
+                               @PathVariable Long activityId,
+                               @Valid @RequestBody ActivityUpdateRequest request) {
+        Long userAuthId = user.getUserAuthId();
+        activityFacade.updateActivity(clubId, activityId, userAuthId, request);
+    }
+
+    @Operation(summary = "활동 기록 삭제", description = "동아리 활동 기록을 삭제합니다.")
+    @DeleteMapping("/{activityId}")
+    public void deleteActivity(@AuthenticationPrincipal RequestUser user,
+                               @PathVariable Long clubId,
+                               @PathVariable Long activityId) {
+        Long userAuthId = user.getUserAuthId();
+        activityFacade.deleteActivity(clubId, activityId, userAuthId);
     }
 }
