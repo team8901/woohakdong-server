@@ -10,8 +10,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 import static com.woohakdong.exception.CustomErrorInfo.BAD_REQUEST_FIREBASE_TOKEN;
 
+
+/**
+ * 현재 일반 유저 로그인 용으로 쓰이는 중.
+ * 네이밍을 일반 유저/어드민 유저와 같은 방식으로 분리할 것도 고민 중.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -22,7 +29,7 @@ public class FirebaseAuthService {
     public SocialUserInfo verifyToken(String idToken) {
         try {
             FirebaseToken decodedToken = firebaseAuth.verifyIdToken(idToken);
-            
+
             String uid = decodedToken.getUid();
             String email = decodedToken.getEmail();
             String name = decodedToken.getName();
@@ -36,11 +43,17 @@ public class FirebaseAuthService {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private String extractProvider(FirebaseToken token) {
-        String provider = (String) token.getClaims().get("firebase.sign_in_provider");
-        if (provider != null) {
-            // Firebase provider IDs: google.com, facebook.com, twitter.com, github.com, etc.
-            return provider.replace(".com", "").toLowerCase();
+        Object firebaseObj = token.getClaims().get("firebase");
+        if (firebaseObj instanceof Map) {
+            Map<String, Object> firebaseClaims = (Map<String, Object>) firebaseObj;
+            Object providerObj = firebaseClaims.get("sign_in_provider");
+            if (providerObj instanceof String) {
+                String provider = (String) providerObj;
+                // Firebase provider IDs: google.com, facebook.com, twitter.com, github.com, etc.
+                return provider.replace(".com", "").toLowerCase();
+            }
         }
         return "firebase";
     }
