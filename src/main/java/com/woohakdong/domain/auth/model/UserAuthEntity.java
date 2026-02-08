@@ -45,7 +45,7 @@ public class UserAuthEntity {
                 null,
                 socialUserInfo.name(),
                 socialUserInfo.email(),
-                UserAuthRole.USER,
+                socialUserInfo.role(),
                 socialUserInfo.provider(),
                 socialUserInfo.providerUserId()
         );

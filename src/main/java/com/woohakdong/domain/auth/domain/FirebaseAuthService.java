@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import com.woohakdong.domain.auth.model.SocialUserInfo;
+import com.woohakdong.domain.auth.model.UserAuthRole;
 import com.woohakdong.exception.CustomAuthException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +27,9 @@ public class FirebaseAuthService {
             String email = decodedToken.getEmail();
             String name = decodedToken.getName();
             String provider = extractProvider(decodedToken);
-            
+
             log.info("Firebase token verified for user: {}", email);
-            return new SocialUserInfo(name, email, uid, provider);
+            return new SocialUserInfo(name, email, uid, provider, UserAuthRole.USER);
         } catch (FirebaseAuthException e) {
             log.error("Failed to verify Firebase token", e);
             throw new CustomAuthException(BAD_REQUEST_FIREBASE_TOKEN);
