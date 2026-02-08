@@ -15,6 +15,52 @@
 **정책**
 - 소셜 로그인 시 기본 role은 USER
 
+### 인증 서비스
+
+#### SocialLoginProvider (인터페이스)
+소셜 로그인 제공자를 위한 공통 인터페이스. Spring의 컴포넌트 스캔을 통해 자동으로 `SocialLoginService`에 등록됩니다.
+
+**메서드**
+- `boolean supports(String provider)`: 해당 provider를 지원하는지 확인
+- `SocialUserInfo fetch(String accessToken)`: 토큰을 검증하고 사용자 정보 반환
+
+#### FirebaseAuthService
+Firebase Authentication을 통한 소셜 로그인(Google, Facebook, Twitter 등)을 처리하는 서비스입니다.
+
+**지원 Provider**
+- `google`, `facebook`, `twitter`, `github`, `kakao`, `naver`, `apple`, `firebase`
+
+**동작 방식**
+1. Firebase ID 토큰 검증
+2. 토큰에서 사용자 정보 추출 (name, email, uid)
+3. Firebase sign_in_provider를 provider로 변환 (예: "google.com" → "google")
+
+#### AdminAuthService
+Firebase Email/Password 인증을 통한 관리자 로그인을 처리하는 전용 서비스입니다.
+
+**지원 Provider**
+- `email-password`
+
+**동작 방식**
+1. Firebase ID 토큰 검증
+2. `firebase.sign_in_provider`가 `"password"`인지 검증 (Email/Password 방식만 허용)
+3. UID 기반 관리자 이름 자동 생성: `"admin-" + uid의 앞 8자` (UID가 8자 미만이면 전체 사용)
+4. Provider를 `"email-password"`로 변환
+
+**정책**
+- Email/Password 방식만 허용 (다른 provider 사용 시 `BAD_REQUEST_INVALID_ADMIN_PROVIDER` 에러)
+- 관리자 이름은 자동 생성되며, Firebase 토큰에 name 필드가 없어도 동작
+- 일반 소셜 로그인(FirebaseAuthService)과 분리하여 관심사 명확화
+
+**SocialUserInfo**
+| 필드 | 타입 | 설명 |
+|------|------|------|
+| name | String | 사용자 이름 (소셜 로그인) 또는 생성된 이름 (관리자) |
+| email | String | 이메일 |
+| providerUserId | String | Provider의 사용자 고유 ID (Firebase UID) |
+| provider | String | 로그인 제공자 (예: "google", "email-password") |
+| role | UserAuthRole | 사용자 권한 (USER: 일반 소셜 로그인, ADMIN: 관리자 로그인) |
+
 ---
 
 ## User (사용자)
